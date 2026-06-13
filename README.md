@@ -235,13 +235,10 @@ HTML/Web Serial port of MegaBurner for programming, reading and verifying **MX29
 
 ![Original MegaBurner hardware](docs/assets/original-megaburner/megaburner_hw.png)
 
-### Original MegaBurner Java/SWT window
-
-![Original MegaBurner Java window](docs/assets/original-megaburner/megaburner_window.png)
-
 ## Required Mega 2560 modification
 
 The MX29L3211 is a **3.3 V** flash memory. The original MegaBurner README explicitly states that the first step is to make the Mega2560 **3.3 V compatible**. Do not connect a 3.3 V flash directly to 5 V logic unless the hardware has been modified or level-shifted.
+(https://learn.adafruit.com/arduino-tips-tricks-and-techniques/3-3v-conversion)
 
 Minimum requirements:
 
