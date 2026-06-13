@@ -14,10 +14,6 @@ Las siguientes imágenes provienen del repositorio original `maximaas/MegaBurner
 
 ![Hardware original de MegaBurner](docs/assets/original-megaburner/megaburner_hw.png)
 
-### Aplicación Java/SWT original de MegaBurner
-
-![Ventana original de MegaBurner](docs/assets/original-megaburner/megaburner_window.png)
-
 ---
 
 ## Origen del proyecto
