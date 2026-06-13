@@ -1,11 +1,10 @@
-# License Notes
+# Notas de licencia
 
-This generated repository package does not assign a new license to upstream code.
+El proyecto original `maximaas/MegaBurner` declara licencia GPL-3.0. Este repositorio conserva ese origen y documenta una traducción/evolución hacia HTML/Web Serial.
 
-Before publishing publicly, check the licenses of:
+Al publicar forks o derivados:
 
-- maximaas/MegaBurner
-- sanni/cartreader
-- MEEPROMMER-derived portions referenced by MegaBurner
-
-Preserve upstream notices and comply with their licenses. Add a final repository license only after confirming compatibility.
+- Mantener créditos a Maximaas/MegaBurner.
+- Mantener créditos a sanni/cartreader y MEEPROMMER como fuentes técnicas reconocidas por MegaBurner.
+- Mantener la referencia a las imágenes originales incluidas en `docs/assets/original-megaburner/`.
+- Revisar y cumplir la licencia original antes de distribuir binarios o modificaciones.

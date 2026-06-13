@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -271,14 +271,14 @@
   <main>
     <div class="left-pane">
       <section class="grid log-panel">
-        <h2>Log</h2>
+        <h2>Registro</h2>
         <div id="log" class="log"></div>
         <div class="button-grid log-actions">
-          <button id="clearLogBtn" title="Clear the on-screen log without affecting the connected Arduino or loaded files.">Clear</button>
-          <button id="stopBtn" title="Request cancellation. The current block will finish first for safety.">Stop</button>
-          <button id="exportLogBtn" title="Download the current log as a TXT file.">Log TXT</button>
-          <button id="exportCsvBtn" title="Download block timing and throughput data as CSV.">CSV</button>
-          <button id="compareDumpBtn" title="Compare the last dump against the prepared image byte by byte and CRC32.">Compare</button>
+          <button id="clearLogBtn" title="Limpiar el registro en pantalla sin afectar el Arduino conectado ni los archivos cargados.">Limpiar</button>
+          <button id="stopBtn" title="Solicitar cancelación. El bloque actual finalizará primero por seguridad.">Detener</button>
+          <button id="exportLogBtn" title="Descargar el registro actual como archivo TXT.">Registro TXT</button>
+          <button id="exportCsvBtn" title="Descargar tiempos por bloque y rendimiento como CSV.">CSV</button>
+          <button id="compareDumpBtn" title="Comparar el último dump contra la imagen preparada byte a byte y por CRC32.">Comparar</button>
         </div>
       </section>
     </div>
@@ -288,126 +288,126 @@
         <input class="tab-input" type="radio" name="tabs" id="tabMain" checked />
         <input class="tab-input" type="radio" name="tabs" id="tabAdv" />
         <div class="tab-labels">
-          <label for="tabMain" title="Main workflow: connect, load ROM, program and verify.">Main</label>
-          <label for="tabAdv" title="Advanced communication and MegaBurner parameters.">Advanced options</label>
+          <label for="tabMain" title="Flujo principal: conectar, cargar ROM, programar y verificar.">Principal</label>
+          <label for="tabAdv" title="Comunicación avanzada y parámetros MegaBurner.">Opciones avanzadas</label>
         </div>
         <div class="tab-body">
           <div id="mainTab" class="tab-page">
             <section class="grid">
-              <h2>1. Connection</h2>
+              <h2>1. Conexión</h2>
               <div class="button-grid">
-                <button id="connectBtn" title="Open the selected serial port. The baudrate must match the compiled firmware.">Connect</button>
-                <button id="disconnectBtn" title="Close the serial connection and release the port.">Disconnect</button>
+                <button id="connectBtn" title="Abrir el puerto serial seleccionado. El baudrate debe coincidir con el firmware compilado.">Conectar</button>
+                <button id="disconnectBtn" title="Cerrar la conexión serial y liberar el puerto.">Desconectar</button>
               </div>
               <div class="status">
-                <div>Status: <strong id="connStatus">disconnected</strong></div>
-                <div>Expected chip: <span class="pill">MX29L3211</span> Expected ID: <span class="pill">C2F9</span></div>
-                <div class="small">Baudrate and operation timeout are in Advanced options.</div>
+                <div>Estado: <strong id="connStatus">desconectado</strong></div>
+                <div>Chip esperado: <span class="pill">MX29L3211</span> ID esperado: <span class="pill">C2F9</span></div>
+                <div class="small">El baudrate y el timeout de operación están en Opciones avanzadas.</div>
               </div>
             </section>
 
             <section class="grid">
-              <h2>2. ROM file / image</h2>
-              <label title="Select a ROM/image file from your computer.">Select file
+              <h2>2. Archivo ROM / imagen</h2>
+              <label title="Seleccionar un archivo ROM/imagen desde el computador.">Seleccionar archivo
                 <input id="romFile" type="file" />
               </label>
               <div class="row">
-                <label title="Target flash size in bytes. MX29L3211 is 4,194,304 bytes.">Chip size bytes
+                <label title="Tamaño objetivo de la flash en bytes. MX29L3211 es 4,194,304 bytes.">Tamaño del chip en bytes
                   <input id="chipSize" type="number" value="4194304" step="1" />
                 </label>
-                <label title="How to expand a smaller ROM to the target chip size.">Fill mode
+                <label title="Cómo expandir una ROM menor hasta el tamaño objetivo del chip.">Modo de relleno
                   <select id="fillMode">
-                    <option value="repeat" selected>Mirror/repeat to 4 MB</option>
-                    <option value="ff">Pad with FF to 4 MB</option>
-                    <option value="none">Do not modify</option>
+                    <option value="repeat" selected>Espejar/repetir hasta 4 MB</option>
+                    <option value="ff">Rellenar con FF hasta 4 MB</option>
+                    <option value="none">No modificar</option>
                   </select>
                 </label>
               </div>
               <div class="button-grid">
-                <button id="prepareBtn" title="Build the final image that will be written to the flash.">Prepare image</button>
-                <button id="downloadPreparedBtn" title="Download the prepared image before programming.">Download prepared</button>
+                <button id="prepareBtn" title="Construir la imagen final que se escribirá en la flash.">Preparar imagen</button>
+                <button id="downloadPreparedBtn" title="Descargar la imagen preparada antes de programar.">Descargar preparada</button>
               </div>
               <div class="status">
-                <div>File: <strong id="fileName">none</strong></div>
-                <div>Original size: <strong id="fileSize">0</strong> bytes</div>
-                <div>Prepared size: <strong id="preparedSize">0</strong> bytes</div>
+                <div>Archivo: <strong id="fileName">ninguno</strong></div>
+                <div>Tamaño original: <strong id="fileSize">0</strong> bytes</div>
+                <div>Tamaño preparado: <strong id="preparedSize">0</strong> bytes</div>
               </div>
             </section>
 
             <section class="grid">
-              <h2>3. Operations</h2>
+              <h2>3. Operaciones</h2>
               <div class="button-grid three">
-                <button id="checkIdBtn" title="Read the flash manufacturer/device ID. Expected MX29L3211 ID is C2F9.">Check ID</button>
-                <button id="eraseBtn" title="Erase the entire flash chip. Required before writing a different image.">Erase</button>
-                <button id="writeBtn" title="Program the prepared image using the selected write mode and parameters.">Write</button>
-                <button id="crcVerifyBtn" title="Fast verification: Arduino computes CRC32 directly from the flash and compares it with the prepared image CRC.">Fast CRC</button>
-                <button id="verifyBtn" title="Full verification: read the whole flash and compare against the prepared image.">Full verify</button>
-                <button id="readBtn" title="Read the full flash contents into a downloadable dump.">Read/Dump</button>
-                <button id="downloadDumpBtn" title="Download the last dump read from the flash.">Download dump</button>
+                <button id="checkIdBtn" title="Leer el ID de fabricante/dispositivo de la flash. El ID esperado de MX29L3211 es C2F9.">Check ID</button>
+                <button id="eraseBtn" title="Borrar completamente el chip flash. Requerido antes de escribir una imagen distinta.">Erase</button>
+                <button id="writeBtn" title="Programar la imagen preparada usando el modo y parámetros de escritura seleccionados.">Write</button>
+                <button id="crcVerifyBtn" title="Verificación rápida: Arduino calcula CRC32 directamente desde la flash y lo compara con el CRC de la imagen preparada.">CRC rápido</button>
+                <button id="verifyBtn" title="Verificación completa: leer toda la flash y comparar contra la imagen preparada.">Verify completo</button>
+                <button id="readBtn" title="Leer todo el contenido de la flash como dump descargable.">Read/Dump</button>
+                <button id="downloadDumpBtn" title="Descargar el último dump leído desde la flash.">Descargar dump</button>
               </div>
               <progress id="progress" max="100" value="0"></progress>
               <div class="status">
-                <div>Operation: <strong id="opStatus">idle</strong></div>
-                <div>Progress: <strong id="progressText">0%</strong></div>
-                <div>Elapsed: <strong id="elapsedText">0s</strong> · ETA: <strong id="etaText">--</strong></div>
-                <div>Average block: <strong id="avgBlockText">--</strong> · min/max: <strong id="minMaxBlockText">--</strong></div>
-                <div>Effective speed: <strong id="speedText">--</strong></div>
-                <div>Erase/Skip FF: <strong id="eraseState">no erase confirmed</strong></div>
+                <div>Operación: <strong id="opStatus">inactiva</strong></div>
+                <div>Progreso: <strong id="progressText">0%</strong></div>
+                <div>Transcurrido: <strong id="elapsedText">0s</strong> · ETA: <strong id="etaText">--</strong></div>
+                <div>Bloque promedio: <strong id="avgBlockText">--</strong> · mín/máx: <strong id="minMaxBlockText">--</strong></div>
+                <div>Velocidad efectiva: <strong id="speedText">--</strong></div>
+                <div>Erase/Skip FF: <strong id="eraseState">erase no confirmado</strong></div>
               </div>
             </section>
           </div>
 
           <div id="advancedTab" class="tab-page">
             <section class="grid">
-              <h2>Advanced options · Communication</h2>
+              <h2>Opciones avanzadas · Comunicación</h2>
               <div class="row">
-                <label title="Serial speed. It must match the baudrate compiled into the Arduino firmware.">Baudrate
+                <label title="Velocidad serial. Debe coincidir con el baudrate compilado en el firmware Arduino.">Baudrate
                   <select id="baudRate">
-                    <option value="115200">115200 original / compatibility</option>
-                    <option value="250000">250000 intermediate</option>
-                    <option value="500000" selected>500000 Final500K recommended</option>
+                    <option value="115200">115200 original / compatibilidad</option>
+                    <option value="250000">250000 intermedio</option>
+                    <option value="500000" selected>500000 recomendado Final500K</option>
                   </select>
                 </label>
-                <label title="Maximum wait time for operation responses and data chunks, in milliseconds.">Operation read timeout ms
+                <label title="Tiempo máximo de espera para respuestas de operación y bloques de datos, en milisegundos.">Timeout de lectura de operaciones (ms)
                   <input id="timeoutMs" type="number" value="5000" min="500" step="500" />
                 </label>
               </div>
-              <div class="compact-note">The system must run at the same baudrate as the compiled .ino firmware. If the firmware was compiled at 500000, select 500000 in this application.</div>
+              <div class="compact-note">El sistema debe ejecutarse en los mismos baudios que el firmware .ino compilado. Si el firmware fue compilado a 500000, selecciona 500000 en esta aplicación.</div>
             </section>
 
             <section class="grid">
-              <h2>Advanced options · MegaBurner parameters</h2>
+              <h2>Opciones avanzadas · Parámetros MegaBurner</h2>
               <div class="row">
-                <label title="Bytes requested per read block. 16384 is the tested fast-read value at 500000 baud.">Read block
+                <label title="Bytes solicitados por bloque de lectura. 16384 es el valor de lectura rápida probado a 500000 baudios.">Bloque de lectura
                   <input id="readBlock" type="number" value="16384" min="128" step="128" />
                 </label>
-                <label title="Bytes sent per write block. 4096 is recommended for Arduino Mega SRAM safety.">Write block
+                <label title="Bytes enviados por bloque de escritura. 4096 es recomendado por seguridad de SRAM en Arduino Mega.">Bloque de escritura
                   <input id="writeBlock" type="number" value="4096" min="128" step="128" />
                 </label>
               </div>
               <div class="row">
-                <label title="Flash page-program size in bytes. 256 matches MX29L3211 native 128-word page mode.">Page size
+                <label title="Tamaño de programación por página en bytes. 256 corresponde al modo nativo de página de 128 words del MX29L3211.">Tamaño de página
                   <select id="pageSize">
-                    <option value="256" selected>256 recommended MX29L3211 / 128 words</option>
-                    <option value="128">128 conservative fallback / 64 words</option>
+                    <option value="256" selected>256 recomendado MX29L3211 / 128 words</option>
+                    <option value="128">128 fallback conservador / 64 words</option>
                   </select>
                 </label>
-                <label title="Optional delay after each write block. Keep 0 unless troubleshooting.">Write delay ms
+                <label title="Delay opcional después de cada bloque de escritura. Mantener en 0 salvo diagnóstico.">Delay de escritura (ms)
                   <input id="writeDelay" type="number" value="0" min="0" step="10" />
                 </label>
               </div>
-              <label title="Fast mode uses S/X/Z; Safe mode uses the legacy W command with reset per block.">Write mode
+              <label title="El modo rápido usa S/X/Z; el modo seguro usa el comando W heredado con reset por bloque.">Modo de escritura
                 <select id="writeMode">
-                  <option value="fast" selected>Fast: S + X blocks + Z, no reset per block</option>
-                  <option value="safe">Safe: original W, reset after each block</option>
+                  <option value="fast" selected>Rápido: S + bloques X + Z, sin reset por bloque</option>
+                  <option value="safe">Seguro: W original, reset después de cada bloque</option>
                 </select>
               </label>
               <label style="display:flex; align-items:center; gap:6px; color:#000;">
                 <input id="skipFF" type="checkbox" style="width:auto; min-height:auto;" />
-                Skip 0xFF pages after Erase OK
-                <span class="pill">solo post-erase</span>
+                Saltar páginas 0xFF después de Erase OK
+                <span class="pill">solo después de erase</span>
               </label>
-              <div class="compact-note">Final recommended values: 500000 baud, Fast write, writeBlock 4096, pageSize 256, readBlock 16384, Fast CRC as the main verification.</div>
+              <div class="compact-note">Valores finales recomendados: 500000 baudios, escritura rápida, writeBlock 4096, pageSize 256, readBlock 16384 y CRC rápido como verificación principal.</div>
             </section>
           </div>
         </div>
@@ -417,6 +417,7 @@
 
 
 <script>
+
 'use strict';
 
 let port = null;
@@ -440,22 +441,22 @@ const dec = new TextDecoder();
 
 
 const TOOLTIP_TEXT = {
-  clearLogBtn: 'Clear the on-screen log without changing files, flash state, or connection.',
-  stopBtn: 'Request a safe stop after the current block completes.',
-  exportLogBtn: 'Save the current log as a TXT file.',
-  exportCsvBtn: 'Save operation timing metrics as CSV.',
-  compareDumpBtn: 'Compare the last dump with the prepared image and report CRC32 or first mismatch.',
-  connectBtn: 'Connect to the Arduino Mega through Web Serial using the selected baudrate.',
-  disconnectBtn: 'Disconnect and release the Web Serial port.',
-  prepareBtn: 'Create the final write image using the selected size and fill mode.',
-  downloadPreparedBtn: 'Download the prepared image for inspection or archival.',
-  checkIdBtn: 'Read the flash ID. MX29L3211 should return C2F9.',
-  eraseBtn: 'Erase the whole flash chip before writing a different ROM/image.',
-  writeBtn: 'Write the prepared image to the flash using the selected write mode.',
-  crcVerifyBtn: 'Ask the firmware to calculate CRC32 directly from flash and compare it with the prepared image.',
-  verifyBtn: 'Full verify: read the whole flash and compare byte by byte against the prepared image.',
-  readBtn: 'Read the whole flash and keep it as a downloadable dump.',
-  downloadDumpBtn: 'Download the most recent flash dump.'
+  clearLogBtn: 'Limpiar el registro en pantalla sin cambiar archivos, estado de la flash o conexión.',
+  stopBtn: 'Solicitar una detención segura después de terminar el bloque actual.',
+  exportLogBtn: 'Guardar el registro actual como archivo TXT.',
+  exportCsvBtn: 'Guardar métricas de tiempo de operación como CSV.',
+  compareDumpBtn: 'Comparar el último dump con la imagen preparada y reportar CRC32 o la primera diferencia.',
+  connectBtn: 'Conectar al Arduino Mega mediante Web Serial usando el baudrate seleccionado.',
+  disconnectBtn: 'Desconectar y liberar el puerto Web Serial.',
+  prepareBtn: 'Crear la imagen final de escritura usando el tamaño y modo de relleno seleccionados.',
+  downloadPreparedBtn: 'Descargar la imagen preparada para inspección o archivo.',
+  checkIdBtn: 'Leer el ID de la flash. MX29L3211 debería devolver C2F9.',
+  eraseBtn: 'Borrar todo el chip flash antes de escribir una ROM/imagen diferente.',
+  writeBtn: 'Escribir la imagen preparada en la flash usando el modo de escritura seleccionado.',
+  crcVerifyBtn: 'Pedir al firmware que calcule CRC32 directamente desde la flash y lo compare con la imagen preparada.',
+  verifyBtn: 'Verify completo: leer toda la flash y comparar byte a byte contra la imagen preparada.',
+  readBtn: 'Leer toda la flash y conservarla como dump descargable.',
+  downloadDumpBtn: 'Descargar el dump de flash más reciente.'
 };
 
 function applyTooltips() {
@@ -482,7 +483,7 @@ function log(msg, cls = '') {
 function setStatus(text) { $('opStatus').textContent = text; }
 function setEraseState(value) {
   eraseDoneThisSession = value;
-  $('eraseState').textContent = value ? 'erase confirmed: Skip FF available' : 'no erase confirmed';
+  $('eraseState').textContent = value ? 'erase confirmado: Skip FF disponible' : 'erase no confirmado';
 }
 function setProgress(done, total) {
   const pct = total ? Math.floor((done / total) * 100) : 0;
@@ -557,7 +558,7 @@ function recordPerf(blockIndex, offset, size, note='') {
   });
   updatePerfUi();
   if (blockIndex === 0 || (blockIndex + 1) % 64 === 0 || perf.done >= perf.totalBytes) {
-    log(`${perf.op}: block ${blockIndex + 1}, offset=0x${offset.toString(16).padStart(6, '0')}, ${ms.toFixed(0)} ms, block speed=${fmtBytesPerSec(bps)}, progress=${Math.floor((perf.done / perf.totalBytes) * 100)}%${note ? ', ' + note : ''}`);
+    log(`${perf.op}: bloque ${blockIndex + 1}, offset=0x${offset.toString(16).padStart(6, '0')}, ${ms.toFixed(0)} ms, velocidad bloque=${fmtBytesPerSec(bps)}, progreso=${Math.floor((perf.done / perf.totalBytes) * 100)}%${note ? ', ' + note : ''}`);
   }
 }
 
@@ -566,7 +567,7 @@ function endPerf() {
   updatePerfUi();
   const elapsed = performance.now() - perf.start;
   const avgMs = perf.count ? perf.sumMs / perf.count : 0;
-  log(`${perf.op}: total time ${fmtDuration(elapsed)}, blocks=${perf.count}, average=${avgMs.toFixed(0)} ms/block, min=${perf.minMs.toFixed(0)} ms, max=${perf.maxMs.toFixed(0)} ms, effective speed=${fmtBytesPerSec(perf.done / (elapsed / 1000))}`, 'oktext');
+  log(`${perf.op}: tiempo total ${fmtDuration(elapsed)}, bloques=${perf.count}, promedio=${avgMs.toFixed(0)} ms/bloque, min=${perf.minMs.toFixed(0)} ms, max=${perf.maxMs.toFixed(0)} ms, velocidad efectiva=${fmtBytesPerSec(perf.done / (elapsed / 1000))}`, 'oktext');
 }
 
 function downloadText(text, name, type='text/plain') {
@@ -578,27 +579,32 @@ function downloadText(text, name, type='text/plain') {
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
-function exportLog() { downloadText(logLines.join('\n') + '\n', `megaburner_log_${new Date().toISOString().replace(/[:.]/g,'-')}.txt`); }
+function exportLog() { downloadText(logLines.join('
+') + '
+', `megaburner_log_${new Date().toISOString().replace(/[:.]/g,'-')}.txt`); }
 function exportPerfCsv() {
-  if (!perfRows.length) throw new Error('No performance metrics available to export');
-  const header = 'op,block,offset,size,ms,block_kib_s,elapsed_ms,total_done,note\n';
-  const lines = perfRows.map(r => `${r.op},${r.block},${r.offset},${r.size},${r.ms},${r.block_kib_s},${r.elapsed_ms},${r.total_done},"${String(r.note||'').replace(/"/g,'""')}"`).join('\n');
-  downloadText(header + lines + '\n', `megaburner_perf_${new Date().toISOString().replace(/[:.]/g,'-')}.csv`, 'text/csv');
+  if (!perfRows.length) throw new Error('No hay métricas de rendimiento disponibles para exportar');
+  const header = 'op,block,offset,size,ms,block_kib_s,elapsed_ms,total_done,note
+';
+  const lines = perfRows.map(r => `${r.op},${r.block},${r.offset},${r.size},${r.ms},${r.block_kib_s},${r.elapsed_ms},${r.total_done},"${String(r.note||'').replace(/"/g,'""')}"`).join('
+');
+  downloadText(header + lines + '
+', `megaburner_perf_${new Date().toISOString().replace(/[:.]/g,'-')}.csv`, 'text/csv');
 }
 
 async function connect() {
-  if (!('serial' in navigator)) throw new Error('Web Serial API is not available. Use a compatible Chrome or Edge browser.');
-  if (port && writer) { log('The port is already connected; it will not be opened again.', 'warn'); return; }
+  if (!('serial' in navigator)) throw new Error('La API Web Serial no está disponible. Usa un navegador compatible como Chrome o Edge.');
+  if (port && writer) { log('El puerto ya está conectado; no se abrirá de nuevo.', 'warn'); return; }
   const baudRate = Number($('baudRate').value);
   port = await navigator.serial.requestPort();
   try { await port.open({ baudRate, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none', bufferSize: 1024 * 1024 }); }
   catch (e) {
-    if (String(e.message || e).includes('already open')) { log('The port was already open. Use Disconnect or reload the page if it is locked.', 'warn'); return; }
+    if (String(e.message || e).includes('already open')) { log('El puerto ya estaba abierto. Usa Desconectar o recarga la página si quedó bloqueado.', 'warn'); return; }
     throw e;
   }
   writer = port.writable.getWriter();
   startReadLoop();
-  $('connStatus').textContent = `connected a ${baudRate}`;
+  $('connStatus').textContent = `conectado a ${baudRate}`;
   log(`Conectado a ${baudRate} baudios`, 'oktext');
   await sleep(1200);
   clearRx();
@@ -613,9 +619,9 @@ async function disconnect() {
   try { if (port) await port.close(); } catch {}
   port = reader = writer = null;
   chunkQueue = []; queuedBytes = 0; pendingReads = [];
-  $('connStatus').textContent = 'disconnected';
+  $('connStatus').textContent = 'desconectado';
   setEraseState(false);
-  log('Desconnected');
+  log('Desconectado');
 }
 
 function enqueueChunk(value) {
@@ -634,7 +640,7 @@ function startReadLoop() {
         if (value && value.length) enqueueChunk(value);
       }
     } catch (e) {
-      if (!String(e).includes('cancel')) log(`Read loop: ${e.message}`, 'errtext');
+      if (!String(e).includes('cancel')) log(`Bucle de lectura: ${e.message}`, 'errtext');
     }
   })();
 }
@@ -695,7 +701,7 @@ async function readRawByte(timeoutMs = Number($('timeoutMs').value)) {
     if (b !== null) return b;
     await sleep(2);
   }
-  throw new Error('Timeout while waiting for byte');
+  throw new Error('Timeout esperando byte');
 }
 async function readLine(timeoutMs = Number($('timeoutMs').value)) {
   const bytes = [];
@@ -706,17 +712,17 @@ async function readLine(timeoutMs = Number($('timeoutMs').value)) {
     if (b === 10) break;
     if (b !== 13) bytes.push(b);
   }
-  if (!bytes.length) throw new Error('Timeout or empty line while waiting for response');
+  if (!bytes.length) throw new Error('Timeout o línea vacía esperando respuesta');
   return dec.decode(new Uint8Array(bytes));
 }
 function explainFirmwareError(code) {
-  const map = { P:'Program fail Q4', E:'Erase fail Q5', T:'Timeout busy/status', R:'Timeout while receiving block', C:'Invalid command/parameters', B:'Invalid block/larger than MAXW', A:'Invalid alignment', U:'Unknown error', '?':'Unsupported command' };
+  const map = { P:'Fallo de programación Q4', E:'Fallo de borrado Q5', T:'Timeout en busy/status', R:'Timeout recibiendo bloque', C:'Comando/parámetros inválidos', B:'Bloque inválido/mayor que MAXW', A:'Alineación inválida', U:'Error desconocido', '?':'Comando no soportado' };
   return map[code] || `Code ${code}`;
 }
 function byteCode(expected) {
   if (typeof expected === 'number') return expected & 0xFF;
   if (typeof expected === 'string' && expected.length === 1) return expected.charCodeAt(0);
-  throw new Error(`Invalid token: ${expected}`);
+  throw new Error(`Token inválido: ${expected}`);
 }
 async function readErrorCode() {
   try { return String.fromCharCode(await readRawByte(300)); } catch { return '?'; }
@@ -730,55 +736,59 @@ async function waitForByte(expected, timeoutMs = Number($('timeoutMs').value)) {
     if (b === 10 || b === 13) continue;
     if (b === '!'.charCodeAt(0)) {
       const code = await readErrorCode();
-      throw new Error(`Firmware returned !${code}: ${explainFirmwareError(code)}`);
+      throw new Error(`El firmware devolvió !${code}: ${explainFirmwareError(code)}`);
     }
     if (b === expectedByte) return b;
     log(`Unexpected byte while waiting for '${String.fromCharCode(expectedByte)}': 0x${b.toString(16).padStart(2, '0')} '${String.fromCharCode(b)}'`, 'warn');
   }
-  throw new Error(`Timeout while waiting for byte '${String.fromCharCode(expectedByte)}'`);
+  throw new Error(`Timeout esperando byte '${String.fromCharCode(expectedByte)}'`);
 }
-async function writeText(text) { if (!writer) throw new Error('No serial port connected'); await writer.write(enc.encode(text)); }
-async function writeBytes(bytes) { if (!writer) throw new Error('No serial port connected'); await writer.write(bytes); }
+async function writeText(text) { if (!writer) throw new Error('No hay puerto serial conectado'); await writer.write(enc.encode(text)); }
+async function writeBytes(bytes) { if (!writer) throw new Error('No hay puerto serial conectado'); await writer.write(bytes); }
 
 async function firmwareVersion() {
-  clearRx(); setStatus('version');
-  await writeText('V\n');
+  clearRx(); setStatus('versión');
+  await writeText('V
+');
   const line = await readLine(3000);
   log(`Firmware: ${line}`, line.includes('0.5E') ? 'oktext' : 'warn');
-  setStatus('idle');
+  setStatus('inactiva');
 }
 async function checkId() {
   clearRx(); setStatus('check id');
-  await writeText('C\n');
+  await writeText('C
+');
   const id = dec.decode(await readExact(4));
   log(`ID read: ${id} ${id === 'C2F9' ? '(OK MX29L3211)' : '(different from C2F9)'}`, id === 'C2F9' ? 'oktext' : 'warn');
-  setStatus('idle');
+  setStatus('inactiva');
 }
 async function statusReg() {
-  clearRx(); setStatus('status');
-  await writeText('Q\n');
+  clearRx(); setStatus('estado');
+  await writeText('Q
+');
   const sr = dec.decode(await readExact(4));
-  log(`Status Register Q: 0x${sr} (Q7 ready, Q5 erase fail, Q4 program fail)`, 'warn');
-  setStatus('idle');
+  log(`Registro de estado Q: 0x${sr} (Q7 listo, Q5 fallo de borrado, Q4 fallo de programación)`, 'warn');
+  setStatus('inactiva');
 }
 async function eraseChip() {
-  if (!confirm('This will erase the flash. Continue?')) return;
+  if (!confirm('Esto borrará la flash. ¿Continuar?')) return;
   clearRx(); setStatus('erase'); setProgress(0, 1);
-  log('Sending E / erase command...', 'warn');
-  await writeText('E\n');
+  log('Enviando comando E / erase...', 'warn');
+  await writeText('E
+');
   await waitForByte('%', Math.max(Number($('timeoutMs').value), 180000));
   setProgress(1, 1); setEraseState(true);
-  log('Erase completed. Skip FF may be enabled manually for the next Write.', 'oktext');
-  setStatus('idle');
+  log('Erase terminado. Skip FF puede habilitarse manualmente para el próximo Write.', 'oktext');
+  setStatus('inactiva');
 }
 
 function prepareImage() {
-  if (!sourceFileBytes) throw new Error('Select a file first');
+  if (!sourceFileBytes) throw new Error('Selecciona primero un archivo');
   const chipSize = Number($('chipSize').value);
   let fillMode = $('fillMode').value;
-  if (sourceFileBytes.length > chipSize) throw new Error(`The file exceeds the chip size (${chipSize} bytes)`);
+  if (sourceFileBytes.length > chipSize) throw new Error(`El archivo excede el tamaño del chip (${chipSize} bytes)`);
   if (sourceFileBytes.length === chipSize && fillMode !== 'none') {
-    log('The file is exactly the target chip size; mode none is forced.', 'warn');
+    log('El archivo tiene exactamente el tamaño objetivo del chip; se fuerza modo none.', 'warn');
     fillMode = 'none'; $('fillMode').value = 'none';
   }
   if (fillMode === 'none') preparedBytes = sourceFileBytes.slice();
@@ -801,37 +811,39 @@ function isAllFFRange(bytes, start, end) {
 }
 async function sendWriteSegment(offset, segment, pageSize, writeMode) {
   const cmd = writeMode === 'fast' ? 'X' : 'W';
-  await writeText(`${cmd}${offset},${pageSize},${segment.length}\n`);
+  await writeText(`${cmd}${offset},${pageSize},${segment.length}
+`);
   await waitForByte('&');
   await writeBytes(segment);
   await waitForByte('%', Math.max(Number($('timeoutMs').value), 30000));
 }
 
 async function writePrepared() {
-  if (!preparedBytes) throw new Error('Prepare the image first');
+  if (!preparedBytes) throw new Error('Prepara primero la imagen');
   clearRx(); stopRequested = false;
   const blockSize = Number($('writeBlock').value);
   const pageSize = Number($('pageSize').value);
   const delayMs = Number($('writeDelay').value);
   const writeMode = $('writeMode') ? $('writeMode').value : 'safe';
   const skipFFEnabled = $('skipFF').checked && eraseDoneThisSession;
-  if ($('skipFF').checked && !eraseDoneThisSession) log('Skip FF requested, but there is no Erase OK in this session; all data will be written.', 'warn');
+  if ($('skipFF').checked && !eraseDoneThisSession) log('Se solicitó Skip FF, pero no hay Erase OK en esta sesión; se escribirán todos los datos.', 'warn');
 
   setStatus('write');
-  log(`Write started: ${preparedBytes.length} bytes, block=${blockSize}, page=${pageSize}, mode=${writeMode}, skipFF=${skipFFEnabled ? 'on' : 'off'}${pageSize === 256 ? ' [MX29L3211 native 128-word page]' : ' [fallback]'}`, 'warn');
+  log(`Inicio Write: ${preparedBytes.length} bytes, block=${blockSize}, page=${pageSize}, modo=${writeMode}, skipFF=${skipFFEnabled ? 'on' : 'off'}${pageSize === 256 ? ' [página nativa MX29L3211 de 128 words]' : ' [fallback]'}`, 'warn');
   beginPerf('write', preparedBytes.length, blockSize);
 
   let skippedBytes = 0, programmedBytes = 0, segments = 0;
   if (writeMode === 'fast') {
-    log('FastWrite: sending S / begin fast write...', 'warn');
-    await writeText('S\n');
+    log('FastWrite: enviando S / begin fast write...', 'warn');
+    await writeText('S
+');
     await waitForByte('%', Math.max(Number($('timeoutMs').value), 30000));
   }
 
   let blockIndex = 0;
   try {
     for (let offset = 0; offset < preparedBytes.length; offset += blockSize, blockIndex++) {
-      if (stopRequested) throw new Error('Operation stopped by user');
+      if (stopRequested) throw new Error('Operación detenida por el usuario');
       const blockEnd = Math.min(offset + blockSize, preparedBytes.length);
       const blockLen = blockEnd - offset;
 
@@ -862,29 +874,31 @@ async function writePrepared() {
       }
 
       setProgress(offset + blockLen, preparedBytes.length);
-      const note = skipFFEnabled && skippedBytes ? `skipped=${skippedBytes}` : '';
+      const note = skipFFEnabled && skippedBytes ? `omitido=${skippedBytes}` : '';
       recordPerf(blockIndex, offset, blockLen, note);
       if (delayMs) await sleep(delayMs);
     }
 
     if (writeMode === 'fast') {
-      log('FastWrite: sending Z / finish fast write...', 'warn');
-      await writeText('Z\n');
+      log('FastWrite: enviando Z / finish fast write...', 'warn');
+      await writeText('Z
+');
       await waitForByte('%', Math.max(Number($('timeoutMs').value), 30000));
     }
   } catch (err) {
     if (writeMode === 'fast') {
-      log('Error during FastWrite. Trying to send Z for final reset...', 'warn');
-      try { await writeText('Z\n'); await waitForByte('%', 30000); } catch (finishErr) { log(`Could not close FastWrite with Z: ${finishErr.message}`, 'errtext'); }
+      log('Error durante FastWrite. Intentando enviar Z para reset final...', 'warn');
+      try { await writeText('Z
+'); await waitForByte('%', 30000); } catch (finishErr) { log(`No se pudo cerrar FastWrite con Z: ${finishErr.message}`, 'errtext'); }
     }
     setEraseState(false);
     throw err;
   }
 
   endPerf();
-  log(`Write completed. Programmed=${programmedBytes} bytes in ${segments} segment(s). Skipped FF=${skippedBytes} bytes.`, 'oktext');
-  setEraseState(false); // Once written, skipFF cannot safely be reused without a new erase.
-  setStatus('idle');
+  log(`Write terminado. Programado=${programmedBytes} bytes en ${segments} segmento(s). FF omitido=${skippedBytes} bytes.`, 'oktext');
+  setEraseState(false); // Una vez escrito, skipFF no puede reutilizarse con seguridad sin un nuevo erase.
+  setStatus('inactiva');
 }
 
 async function readChip() {
@@ -893,62 +907,65 @@ async function readChip() {
   const blockSize = Number($('readBlock').value);
   dumpBytes = new Uint8Array(chipSize);
   setStatus('read/dump');
-  log(`Read started: ${chipSize} bytes, block=${blockSize}`, 'warn');
+  log(`Inicio Read: ${chipSize} bytes, block=${blockSize}`, 'warn');
   beginPerf('read', chipSize, blockSize);
   let blockNum = 0;
   for (let offset = 0; offset < chipSize; offset += blockSize, blockNum++) {
-    if (stopRequested) throw new Error('Operation stopped by user');
+    if (stopRequested) throw new Error('Operación detenida por el usuario');
     const size = Math.min(blockSize, chipSize - offset);
-    await writeText(`R${blockNum},${size}\n`);
+    await writeText(`R${blockNum},${size}
+`);
     const chunk = await readExact(size, Math.max(Number($('timeoutMs').value), 30000));
     dumpBytes.set(chunk, offset);
     setProgress(offset + size, chipSize);
     recordPerf(blockNum, offset, size);
   }
-  endPerf(); log('Read/Dump completed', 'oktext'); setStatus('idle');
+  endPerf(); log('Read/Dump terminado', 'oktext'); setStatus('inactiva');
 }
 
 async function crcVerifyPrepared() {
-  if (!preparedBytes) throw new Error('Prepare the image first');
+  if (!preparedBytes) throw new Error('Prepara primero la imagen');
   clearRx(); stopRequested = false;
   const size = preparedBytes.length;
   const localCrc = crc32(preparedBytes).toString(16).toUpperCase().padStart(8, '0');
   setStatus('crc verify'); setProgress(0, 1); resetMetricUi();
-  log(`Fast CRC Verify v0.5E: local/prepared=${localCrc}. Requesting flash CRC K0,${size}...`, 'warn');
+  log(`CRC rápido v0.5E: local/preparada=${localCrc}. Solicitando CRC de flash K0,${size}...`, 'warn');
   const start = performance.now();
-  await writeText(`K0,${size}\n`);
+  await writeText(`K0,${size}
+`);
   const first = await readRawByte(Math.max(Number($('timeoutMs').value), 240000));
-  if (first === '!'.charCodeAt(0)) { const code = await readErrorCode(); throw new Error(`Firmware returned !${code}: ${explainFirmwareError(code)}`); }
+  if (first === '!'.charCodeAt(0)) { const code = await readErrorCode(); throw new Error(`El firmware devolvió !${code}: ${explainFirmwareError(code)}`); }
   const rest = await readExact(7, Math.max(Number($('timeoutMs').value), 30000));
   const bytes = new Uint8Array(8); bytes[0] = first; bytes.set(rest, 1);
   const flashCrc = dec.decode(bytes).trim().toUpperCase();
   const elapsed = performance.now() - start;
   setProgress(1, 1); $('elapsedText').textContent = fmtDuration(elapsed); $('etaText').textContent = '--'; $('speedText').textContent = fmtBytesPerSec(size / (elapsed / 1000));
-  if (!/^[0-9A-F]{8}$/.test(flashCrc)) throw new Error(`Invalid CRC response from firmware: '${flashCrc}'`);
-  if (flashCrc === localCrc) log(`CRC Verify OK. flash=${flashCrc}, prepared=${localCrc}, time=${fmtDuration(elapsed)}, logical speed=${fmtBytesPerSec(size / (elapsed / 1000))}`, 'oktext');
-  else log(`CRC Verify FAILED. flash=${flashCrc}, prepared=${localCrc}, time=${fmtDuration(elapsed)}`, 'errtext');
-  setStatus('idle');
+  if (!/^[0-9A-F]{8}$/.test(flashCrc)) throw new Error(`Respuesta CRC inválida del firmware: '${flashCrc}'`);
+  if (flashCrc === localCrc) log(`CRC Verify OK. flash=${flashCrc}, preparada=${localCrc}, tiempo=${fmtDuration(elapsed)}, velocidad lógica=${fmtBytesPerSec(size / (elapsed / 1000))}`, 'oktext');
+  else log(`CRC Verify FALLÓ. flash=${flashCrc}, preparada=${localCrc}, tiempo=${fmtDuration(elapsed)}`, 'errtext');
+  setStatus('inactiva');
 }
 
 async function verifyPrepared() {
-  if (!preparedBytes) throw new Error('Prepare the image first');
+  if (!preparedBytes) throw new Error('Prepara primero la imagen');
   clearRx(); stopRequested = false;
   const blockSize = Number($('readBlock').value);
-  setStatus('verify'); log(`Verify started: ${preparedBytes.length} bytes, readBlock=${blockSize}`, 'warn');
+  setStatus('verify'); log(`Inicio Verify: ${preparedBytes.length} bytes, readBlock=${blockSize}`, 'warn');
   beginPerf('verify', preparedBytes.length, blockSize);
   let blockNum = 0;
   for (let offset = 0; offset < preparedBytes.length; offset += blockSize, blockNum++) {
-    if (stopRequested) throw new Error('Operation stopped by user');
+    if (stopRequested) throw new Error('Operación detenida por el usuario');
     const size = Math.min(blockSize, preparedBytes.length - offset);
-    await writeText(`R${blockNum},${size}\n`);
+    await writeText(`R${blockNum},${size}
+`);
     const chunk = await readExact(size, Math.max(Number($('timeoutMs').value), 30000));
     for (let i = 0; i < size; i++) if (chunk[i] !== preparedBytes[offset + i]) {
       const abs = offset + i;
-      throw new Error(`Verify failed at offset 0x${abs.toString(16).padStart(6, '0')}: flash=0x${chunk[i].toString(16).padStart(2, '0')} file=0x${preparedBytes[offset+i].toString(16).padStart(2, '0')}`);
+      throw new Error(`Verify falló en offset 0x${abs.toString(16).padStart(6, '0')}: flash=0x${chunk[i].toString(16).padStart(2, '0')} archivo=0x${preparedBytes[offset+i].toString(16).padStart(2, '0')}`);
     }
     setProgress(offset + size, preparedBytes.length); recordPerf(blockNum, offset, size);
   }
-  endPerf(); log('Verify OK: flash matches prepared image', 'oktext'); setStatus('idle');
+  endPerf(); log('Verify OK: flash coincide con imagen preparada', 'oktext'); setStatus('inactiva');
 }
 
 function crc32(bytes) {
@@ -963,18 +980,18 @@ function crc32(bytes) {
   return (crc ^ 0xFFFFFFFF) >>> 0;
 }
 function compareDumpPrepared() {
-  if (!dumpBytes) throw new Error('Run Read/Dump first');
-  if (!preparedBytes) throw new Error('Prepare or load the expected image first');
+  if (!dumpBytes) throw new Error('Primero genera un Read/Dump');
+  if (!preparedBytes) throw new Error('Primero prepara o carga la imagen esperada');
   const total = Math.min(dumpBytes.length, preparedBytes.length);
-  log(`Comparing dump (${dumpBytes.length} bytes) against prepared image (${preparedBytes.length} bytes)...`, 'warn');
-  if (dumpBytes.length !== preparedBytes.length) log('Warning: sizes differ; the common range will be compared.', 'warn');
-  for (let i = 0; i < total; i++) if (dumpBytes[i] !== preparedBytes[i]) { log(`Difference at offset 0x${i.toString(16).padStart(6, '0')}: dump=0x${dumpBytes[i].toString(16).padStart(2, '0')} prepared=0x${preparedBytes[i].toString(16).padStart(2, '0')}`, 'errtext'); return; }
+  log(`Comparando dump (${dumpBytes.length} bytes) contra imagen preparada (${preparedBytes.length} bytes)...`, 'warn');
+  if (dumpBytes.length !== preparedBytes.length) log('Advertencia: los tamaños difieren; se comparará el rango común.', 'warn');
+  for (let i = 0; i < total; i++) if (dumpBytes[i] !== preparedBytes[i]) { log(`Diferencia en offset 0x${i.toString(16).padStart(6, '0')}: dump=0x${dumpBytes[i].toString(16).padStart(2, '0')} preparada=0x${preparedBytes[i].toString(16).padStart(2, '0')}`, 'errtext'); return; }
   const crcDump = crc32(dumpBytes).toString(16).toUpperCase().padStart(8, '0');
   const crcPrep = crc32(preparedBytes).toString(16).toUpperCase().padStart(8, '0');
-  log(`Comparison OK. CRC32 dump=${crcDump}, prepared=${crcPrep}`, 'oktext');
+  log(`Comparación OK. CRC32 dump=${crcDump}, preparada=${crcPrep}`, 'oktext');
 }
 function downloadBytes(bytes, name) {
-  if (!bytes) throw new Error('No data available to download');
+  if (!bytes) throw new Error('No hay datos para descargar');
   const blob = new Blob([bytes], { type: 'application/octet-stream' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
@@ -997,27 +1014,28 @@ bindClick('verifyBtn', () => runGuard(verifyPrepared));
 bindClick('crcVerifyBtn', () => runGuard(crcVerifyPrepared));
 bindClick('readBtn', () => runGuard(readChip));
 bindClick('prepareBtn', () => runGuard(async () => prepareImage()));
-bindClick('downloadPreparedBtn', () => runGuard(async () => downloadBytes(preparedBytes, 'megaburner_prepared_4mb.bin')));
+bindClick('downloadPreparedBtn', () => runGuard(async () => downloadBytes(preparedBytes, 'megaburner_imagen_preparada_4mb.bin')));
 bindClick('downloadDumpBtn', () => runGuard(async () => downloadBytes(dumpBytes, 'megaburner_dump.bin')));
 bindClick('clearLogBtn', () => { $('log').textContent = ''; logLines = []; });
 bindClick('exportLogBtn', () => runGuard(async () => exportLog()));
 bindClick('exportCsvBtn', () => runGuard(async () => exportPerfCsv()));
 bindClick('compareDumpBtn', () => runGuard(async () => compareDumpPrepared()));
-bindClick('stopBtn', () => { stopRequested = true; log('Stop request sent; it will stop after the current block finishes.', 'warn'); });
+bindClick('stopBtn', () => { stopRequested = true; log('Solicitud de detención enviada; se detendrá después de finalizar el bloque actual.', 'warn'); });
 
 $('romFile').addEventListener('change', async (ev) => {
   const file = ev.target.files[0]; if (!file) return;
   const buf = await file.arrayBuffer();
   sourceFileBytes = new Uint8Array(buf); preparedBytes = null; dumpBytes = null;
   $('fileName').textContent = file.name; $('fileSize').textContent = sourceFileBytes.length.toLocaleString(); $('preparedSize').textContent = '0';
-  log(`File loaded: ${file.name}, ${sourceFileBytes.length} bytes`);
+  log(`Archivo cargado: ${file.name}, ${sourceFileBytes.length} bytes`);
   const chipSize = Number($('chipSize').value);
-  if (sourceFileBytes.length === chipSize) { $('fillMode').value = 'none'; log('File is exactly the chip size: mode none was selected automatically.', 'warn'); }
+  if (sourceFileBytes.length === chipSize) { $('fillMode').value = 'none'; log('El archivo tiene exactamente el tamaño del chip: se seleccionó automáticamente modo none.', 'warn'); }
 });
 
 applyTooltips();
 setEraseState(false);
-log('MegaBurner Web Serial v0.5E MX29L3211 ready. Recommended flow: connect, Check ID, load ROM, prepare image, Erase, Fast write, Fast CRC Verify.');
+log('MegaBurner Web Serial v0.5E MX29L3211 listo. Flujo recomendado: conectar, Check ID, cargar ROM, preparar imagen, Erase, Write rápido y CRC rápido.');
+
 </script>
 
 </body>

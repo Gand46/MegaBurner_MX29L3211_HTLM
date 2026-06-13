@@ -1,14 +1,14 @@
-# Benchmark Results
+# Benchmarks
 
-Local test results gathered during development. These depend on Arduino board, USB bridge, cable, browser and PC.
+Resultados observados durante el desarrollo del port HTML/Web Serial.
 
-| Stage | Typical result |
-|---|---:|
-| v0.3 write, page 128 | ~17m44s |
-| v0.4B FastWrite | ~3m04s to ~3m51s |
-| v0.3 Read/Dump | ~11m31s |
-| v0.4A/v0.5 readBlock 16384 | ~1m24s |
-| v0.4C FastCRC | ~1m04s |
-| 1M baud | Rejected as unstable in local tests |
+| Versión | Operación | Parámetros | Tiempo aprox. | Resultado |
+|---|---|---|---:|---|
+| v0.3 | Write | 500000, block 4096, page 128 | 17m44s | OK |
+| v0.4A | Read/Dump | 500000, readBlock 16384 | 1m49s | OK |
+| v0.4B | Write | 500000, block 4096, page 128 | 3m04s–3m51s | OK |
+| v0.4C | CRC Verify | 500000 | 1m04s | OK |
+| v0.5A | Write | 500000, block 4096, page 256 | Validado con 2 ROMs | OK |
+| v0.5B | 1000000 baud | prueba real | Inestable | Descartado |
 
-Final recommended profile: 500000 baud, Fast write, pageSize 256, readBlock 16384.
+La configuración final se mantiene en 500000 baudios por estabilidad.

@@ -1,20 +1,30 @@
-# Troubleshooting
+# Solución de problemas
 
-## Check ID does not return C2F9
+## Check ID no devuelve C2F9
 
-- Confirm baudrate matches the compiled firmware.
-- Confirm wiring of CE/OE/WE/BYTE and D0-D15.
-- Confirm the flash is powered at 3.3 V.
-- Confirm BYTE is high for x16 mode.
+- Verifica baudios.
+- Verifica cableado.
+- Verifica alimentación de 3.3 V.
+- Verifica `BYTE` en HIGH.
+- No ejecutes Erase/Write hasta resolverlo.
 
-## Write succeeds but verify fails with bits stuck at 0
+## Timeout
 
-This usually means the chip was not erased before writing. NOR flash can program 1 → 0, but cannot program 0 → 1 without erase.
+- El HTML y el `.ino` deben usar los mismos baudios.
+- Usa 500000 como perfil final recomendado.
+- Revisa cable USB y puerto.
+- Reconecta y limpia RX.
 
-## 1000000 baud is unstable
+## CRC falla
 
-Use the final 500000 baud profile. This project rejected 1M as unstable after read failures in local tests.
+- Realiza Read/Dump completo.
+- Compara contra imagen preparada.
+- Verifica que hiciste Erase antes de escribir una ROM distinta.
 
-## Skip FF writes old data
+## Diferencias tipo dump=0x10 preparada=0x30
 
-Skip FF is only safe after Erase OK in the same session. Leave it off unless you understand the image layout.
+Puede indicar que se intentó escribir sin borrar previamente. En NOR flash no se pueden cambiar bits de 0 a 1 sin erase.
+
+## 1.000.000 baudios
+
+Fue probado y resultó inestable en el entorno de desarrollo. No se recomienda como perfil final.

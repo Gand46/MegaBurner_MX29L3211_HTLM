@@ -1,9 +1,10 @@
-# GitHub Publish Checklist
+# Checklist para publicar en GitHub
 
-- [ ] Confirm upstream licenses.
-- [ ] Add final LICENSE file if compatible.
-- [ ] Add screenshots to `docs/images/`.
-- [ ] Re-test current firmware and web UI from a fresh clone.
-- [ ] Confirm Arduino IDE/CLI compile instructions.
-- [ ] Add release artifacts under GitHub Releases.
-- [ ] Include wiring photos or PCB files if available.
+- [ ] Subir `index.html` final en español.
+- [ ] Subir `firmware/current/`.
+- [ ] Confirmar imágenes en `docs/assets/original-megaburner/`.
+- [ ] Revisar README bilingüe.
+- [ ] Confirmar pinout antes de construir hardware.
+- [ ] Indicar claramente que la MX29L3211 requiere 3.3 V.
+- [ ] Mantener créditos y licencia.
+- [ ] Probar Check ID, Erase, Write, CRC Verify y Dump.

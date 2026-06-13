@@ -1,15 +1,34 @@
 # Manual de uso — MegaBurner Web Serial v0.5E MX29L3211
 
-La aplicación principal del repositorio está en inglés, pero el flujo de uso recomendado es:
+## Requisitos
 
-1. Abrir `web/index.html` en Chrome o Edge.
-2. Conectar el Arduino Mega a 500000 baudios.
-3. Verificar ID: debe devolver `C2F9`.
-4. Cargar la ROM/imagen.
-5. Preparar imagen.
-6. Borrar chip con Erase.
-7. Programar con Write.
-8. Verificar con Fast CRC.
-9. Si se requiere validación profunda, hacer Read/Dump y Compare.
+- Arduino Mega 2560 modificado o adaptado para trabajar con señales de 3.3 V.
+- Firmware de `firmware/current/` cargado en el Arduino.
+- Navegador compatible con Web Serial: Chrome o Edge.
+- MX29L3211 conectada conforme al pinout.
+- Archivo ROM/imagen de hasta 4 MB.
 
-Valores finales recomendados: 500000 baudios, Fast Write, writeBlock 4096, pageSize 256, readBlock 16384.
+## Flujo recomendado
+
+1. Abrir `index.html`.
+2. Conectar el Arduino por USB.
+3. En opciones avanzadas, confirmar baudrate igual al `.ino` compilado. Valor final recomendado: 500000.
+4. Pulsar **Conectar**.
+5. Pulsar **Check ID**. El ID esperado es `C2F9`.
+6. Seleccionar la ROM.
+7. Preparar imagen.
+8. Ejecutar **Erase**.
+9. Ejecutar **Write**.
+10. Ejecutar **CRC Verify rápido**.
+11. Opcional: ejecutar **Read/Dump** y comparar dump contra imagen preparada.
+
+## Skip FF
+
+La opción “Saltar páginas 0xFF después de Erase OK” está desactivada inicialmente. Solo debe activarse manualmente cuando se haya hecho un Erase correcto en la misma sesión. Evita programar páginas que ya quedaron en `0xFF` tras el borrado.
+
+## Solución de problemas
+
+- Si `Check ID` no devuelve `C2F9`, no escribas la memoria.
+- Si hay timeout, revisa baudios, puerto, cable USB y firmware.
+- Si el CRC falla, haz dump completo y compara.
+- Si aparece diferencia tipo `dump=0x10` y `preparada=0x30`, puede indicar falta de erase previo.
