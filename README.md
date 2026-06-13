@@ -14,6 +14,7 @@ Las siguientes imágenes provienen del repositorio original `maximaas/MegaBurner
 
 ![Hardware original de MegaBurner](docs/assets/original-megaburner/megaburner_hw.png)
 
+Convertir a 3.3V (https://learn.adafruit.com/arduino-tips-tricks-and-techniques/3-3v-conversion)
 ---
 
 ## Origen del proyecto
