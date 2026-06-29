@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MegaBurner Web Serial v0.5E Final500K</title>
+  <title>MegaBurner Web Serial v0.5A NativePage256</title>
   <style>
     :root {
       --bg: #101318;
@@ -128,8 +128,8 @@
 </head>
 <body>
   <header>
-    <h1>MegaBurner Web Serial v0.5E Final500K</h1>
-    <p>Port final consolidado de la aplicación de PC de MegaBurner a HTML + JavaScript. v0.5E mantiene 500000 baudios estables, PageSize 256 nativo para MX29L3211, FastRead, FastWrite, FastCRC con tabla, SafeStatus con códigos de error y Skip FF posterior a Erase. Diseñado para MX29L3211 / 4 MB con firmware compatible en Arduino Mega 2560.</p>
+    <h1>MegaBurner Web Serial v0.5A NativePage256</h1>
+    <p>Port de la aplicación de PC de MegaBurner a HTML + JavaScript. v0.5A consolida FastRead, FastWrite y FastCRC, y cambia el perfil recomendado de escritura a PageSize 256 bytes, equivalente a 128 words en modo 16-bit para MX29L3211. PageSize 128 queda disponible como fallback conservador. El dump completo sigue disponible para validación profunda. Diseñado para MX29L3211 / 4 MB con firmware compatible en Arduino Mega 2560.</p>
   </header>
 
   <main>
@@ -141,7 +141,7 @@
             <option value="115200">115200 original</option>
             <option value="250000">250000 intermedio</option>
             <option value="500000" selected>500000 rápido</option>
-            <option value="1000000" disabled>1000000 no recomendado / inestable en pruebas</option>
+            <option value="1000000">1000000 turbo / validar</option>
           </select>
         </label>
         <label>Timeout lectura ms
@@ -214,18 +214,12 @@
           <option value="safe">Seguro: W original, reset después de cada bloque</option>
         </select>
       </label>
-      <label style="display:flex; align-items:center; gap:8px; color:var(--muted);">
-        <input id="skipFF" type="checkbox" checked style="width:auto;" />
-        Saltar páginas 0xFF después de Erase OK 
-        <span class="pill">seguro solo post-erase</span>
-      </label>
-      <div class="small">v0.5E Final500K: pageSize 256 queda como perfil recomendado. 128 sigue disponible como fallback. Skip FF solo se activa después de un Erase exitoso en esta misma sesión y se desactiva automáticamente al terminar un Write.</div>
+      <div class="small">v0.5A NativePage256: usa pageSize 256 como perfil recomendado ya probado con dos ROMs completas sin espejo. Mantén pageSize 128 solo como fallback si aparece alguna incompatibilidad.</div>
     </section>
 
     <section class="grid">
       <h2>4. Operaciones</h2>
       <div class="button-grid">
-        <button id="versionBtn">Firmware V</button>
         <button id="checkIdBtn" class="ok">Check ID</button>
         <button id="eraseBtn" class="danger">Erase</button>
         <button id="writeBtn" class="primary">Write</button>
@@ -233,7 +227,6 @@
         <button id="verifyBtn">Verify completo</button>
         <button id="readBtn">Read/Dump</button>
         <button id="downloadDumpBtn">Descargar dump</button>
-        <button id="statusBtn">Status Q</button>
       </div>
       <progress id="progress" max="100" value="0"></progress>
       <div class="status">
@@ -242,7 +235,6 @@
         <div>Tiempo: <strong id="elapsedText">0s</strong> · ETA: <strong id="etaText">--</strong></div>
         <div>Bloque promedio: <strong id="avgBlockText">--</strong> · mín/máx: <strong id="minMaxBlockText">--</strong></div>
         <div>Velocidad efectiva: <strong id="speedText">--</strong></div>
-        <div>Erase/Skip FF: <strong id="eraseState">sin erase confirmado</strong></div>
       </div>
     </section>
 
@@ -259,21 +251,18 @@
     </section>
   </main>
 
-
 <script>
 'use strict';
 
 let port = null;
 let reader = null;
 let writer = null;
-let chunkQueue = [];
-let queuedBytes = 0;
+let readQueue = [];
 let pendingReads = [];
 let sourceFileBytes = null;
 let preparedBytes = null;
 let dumpBytes = null;
 let stopRequested = false;
-let eraseDoneThisSession = false;
 let perf = null;
 let perfRows = [];
 let logLines = [];
@@ -284,8 +273,7 @@ const dec = new TextDecoder();
 
 function log(msg, cls = '') {
   const now = new Date().toLocaleTimeString();
-  const line = `[${now}] ${msg}
-`;
+  const line = `[${now}] ${msg}\n`;
   logLines.push(line.trimEnd());
   const el = $('log');
   const span = document.createElement('span');
@@ -296,10 +284,6 @@ function log(msg, cls = '') {
 }
 
 function setStatus(text) { $('opStatus').textContent = text; }
-function setEraseState(value) {
-  eraseDoneThisSession = value;
-  $('eraseState').textContent = value ? 'erase confirmado: Skip FF habilitable' : 'sin erase confirmado';
-}
 function setProgress(done, total) {
   const pct = total ? Math.floor((done / total) * 100) : 0;
   $('progress').value = pct;
@@ -354,7 +338,7 @@ function updatePerfUi() {
   $('speedText').textContent = fmtBytesPerSec(speed);
 }
 
-function recordPerf(blockIndex, offset, size, note='') {
+function recordPerf(blockIndex, offset, size) {
   if (!perf) return;
   const now = performance.now();
   const ms = now - perf.last;
@@ -367,13 +351,18 @@ function recordPerf(blockIndex, offset, size, note='') {
   const elapsed = now - perf.start;
   const bps = size / (ms / 1000);
   perfRows.push({
-    op: perf.op, block: blockIndex, offset, size, ms: Math.round(ms),
-    block_kib_s: +(bps / 1024).toFixed(2), elapsed_ms: Math.round(elapsed),
-    total_done: perf.done, note
+    op: perf.op,
+    block: blockIndex,
+    offset,
+    size,
+    ms: Math.round(ms),
+    block_kib_s: +(bps / 1024).toFixed(2),
+    elapsed_ms: Math.round(elapsed),
+    total_done: perf.done
   });
   updatePerfUi();
   if (blockIndex === 0 || (blockIndex + 1) % 64 === 0 || perf.done >= perf.totalBytes) {
-    log(`${perf.op}: bloque ${blockIndex + 1}, offset=0x${offset.toString(16).padStart(6, '0')}, ${ms.toFixed(0)} ms, velocidad bloque=${fmtBytesPerSec(bps)}, progreso=${Math.floor((perf.done / perf.totalBytes) * 100)}%${note ? ', ' + note : ''}`);
+    log(`${perf.op}: bloque ${blockIndex + 1}, offset=0x${offset.toString(16).padStart(6, '0')}, ${ms.toFixed(0)} ms, velocidad bloque=${fmtBytesPerSec(bps)}, progreso=${Math.floor((perf.done / perf.totalBytes) * 100)}%`);
   }
 }
 
@@ -394,36 +383,44 @@ function downloadText(text, name, type='text/plain') {
   a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
-function exportLog() { downloadText(logLines.join('
-') + '
-', `megaburner_log_${new Date().toISOString().replace(/[:.]/g,'-')}.txt`); }
-function exportPerfCsv() {
-  if (!perfRows.length) throw new Error('No hay métricas de rendimiento para exportar');
-  const header = 'op,block,offset,size,ms,block_kib_s,elapsed_ms,total_done,note
-';
-  const lines = perfRows.map(r => `${r.op},${r.block},${r.offset},${r.size},${r.ms},${r.block_kib_s},${r.elapsed_ms},${r.total_done},"${String(r.note||'').replace(/"/g,'""')}"`).join('
-');
-  downloadText(header + lines + '
-', `megaburner_perf_${new Date().toISOString().replace(/[:.]/g,'-')}.csv`, 'text/csv');
+
+function exportLog() {
+  downloadText(logLines.join('\n') + '\n', `megaburner_log_${new Date().toISOString().replace(/[:.]/g,'-')}.txt`);
 }
 
+function exportPerfCsv() {
+  if (!perfRows.length) throw new Error('No hay métricas de rendimiento para exportar');
+  const header = 'op,block,offset,size,ms,block_kib_s,elapsed_ms,total_done\n';
+  const lines = perfRows.map(r => `${r.op},${r.block},${r.offset},${r.size},${r.ms},${r.block_kib_s},${r.elapsed_ms},${r.total_done}`).join('\n');
+  downloadText(header + lines + '\n', `megaburner_perf_${new Date().toISOString().replace(/[:.]/g,'-')}.csv`, 'text/csv');
+}
+
+
 async function connect() {
-  if (!('serial' in navigator)) throw new Error('Web Serial API no está disponible. Usa Chrome o Edge compatible.');
-  if (port && writer) { log('El puerto ya está conectado; no se abre nuevamente.', 'warn'); return; }
+  if (!('serial' in navigator)) {
+    throw new Error('Web Serial API no está disponible. Usa Chrome, Edge u otro navegador compatible en HTTPS o archivo local permitido.');
+  }
+  if (port && writer) {
+    log('El puerto ya está conectado; no se abre nuevamente.', 'warn');
+    return;
+  }
   const baudRate = Number($('baudRate').value);
   port = await navigator.serial.requestPort();
-  try { await port.open({ baudRate, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none', bufferSize: 1024 * 1024 }); }
-  catch (e) {
-    if (String(e.message || e).includes('already open')) { log('El puerto ya estaba abierto. Usa Desconectar o recarga la página si quedó bloqueado.', 'warn'); return; }
+  try {
+    await port.open({ baudRate, dataBits: 8, stopBits: 1, parity: 'none', flowControl: 'none', bufferSize: 1024 * 1024 });
+  } catch (e) {
+    if (String(e.message || e).includes('already open')) {
+      log('El puerto ya estaba abierto. Usa Desconectar o recarga la página si quedó un bloqueo del navegador.', 'warn');
+      return;
+    }
     throw e;
   }
   writer = port.writable.getWriter();
   startReadLoop();
   $('connStatus').textContent = `conectado a ${baudRate}`;
   log(`Conectado a ${baudRate} baudios`, 'oktext');
-  await sleep(1200);
+  await sleep(1200); // da tiempo al reset típico de placas Arduino al abrir puerto
   clearRx();
-  setEraseState(false);
 }
 
 async function disconnect() {
@@ -433,17 +430,10 @@ async function disconnect() {
   try { if (writer) writer.releaseLock(); } catch {}
   try { if (port) await port.close(); } catch {}
   port = reader = writer = null;
-  chunkQueue = []; queuedBytes = 0; pendingReads = [];
   $('connStatus').textContent = 'desconectado';
-  setEraseState(false);
   log('Desconectado');
 }
 
-function enqueueChunk(value) {
-  chunkQueue.push({ buf: value, off: 0 });
-  queuedBytes += value.length;
-  flushPendingReads();
-}
 function startReadLoop() {
   stopRequested = false;
   reader = port.readable.getReader();
@@ -452,148 +442,97 @@ function startReadLoop() {
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
-        if (value && value.length) enqueueChunk(value);
+        if (value && value.length) {
+          for (const b of value) readQueue.push(b);
+          flushPendingReads();
+        }
       }
     } catch (e) {
       if (!String(e).includes('cancel')) log(`Read loop: ${e.message}`, 'errtext');
     }
   })();
 }
-function takeBytes(n) {
-  if (queuedBytes < n) return null;
-  const out = new Uint8Array(n);
-  let copied = 0;
-  while (copied < n) {
-    const head = chunkQueue[0];
-    const avail = head.buf.length - head.off;
-    const take = Math.min(avail, n - copied);
-    out.set(head.buf.subarray(head.off, head.off + take), copied);
-    head.off += take;
-    copied += take;
-    queuedBytes -= take;
-    if (head.off >= head.buf.length) chunkQueue.shift();
-  }
-  return out;
-}
-function takeOneByte() {
-  if (queuedBytes < 1) return null;
-  const head = chunkQueue[0];
-  const b = head.buf[head.off++];
-  queuedBytes--;
-  if (head.off >= head.buf.length) chunkQueue.shift();
-  return b;
-}
+
 function flushPendingReads() {
-  while (pendingReads.length && queuedBytes >= pendingReads[0].n) {
+  while (pendingReads.length && readQueue.length >= pendingReads[0].n) {
     const p = pendingReads.shift();
-    const data = takeBytes(p.n);
+    const data = new Uint8Array(readQueue.splice(0, p.n));
     clearTimeout(p.timer);
     p.resolve(data);
   }
 }
+
 function clearRx() {
-  const n = queuedBytes;
-  chunkQueue = []; queuedBytes = 0;
+  const n = readQueue.length;
+  readQueue = [];
   if (n) log(`RX limpiado: ${n} bytes descartados`);
 }
+
 function readExact(n, timeoutMs = Number($('timeoutMs').value)) {
-  const immediate = takeBytes(n);
-  if (immediate) return Promise.resolve(immediate);
+  if (readQueue.length >= n) return Promise.resolve(new Uint8Array(readQueue.splice(0, n)));
   return new Promise((resolve, reject) => {
     const timer = setTimeout(() => {
       const idx = pendingReads.findIndex(p => p.resolve === resolve);
       if (idx >= 0) pendingReads.splice(idx, 1);
-      reject(new Error(`Timeout esperando ${n} bytes; recibidos en cola: ${queuedBytes}`));
+      reject(new Error(`Timeout esperando ${n} bytes; recibidos en cola: ${readQueue.length}`));
     }, timeoutMs);
     pendingReads.push({ n, resolve, reject, timer });
     flushPendingReads();
   });
 }
-async function readRawByte(timeoutMs = Number($('timeoutMs').value)) {
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
-    const b = takeOneByte();
-    if (b !== null) return b;
-    await sleep(2);
-  }
-  throw new Error('Timeout esperando byte');
-}
-async function readLine(timeoutMs = Number($('timeoutMs').value)) {
-  const bytes = [];
-  const deadline = Date.now() + timeoutMs;
-  while (Date.now() < deadline) {
-    const b = takeOneByte();
-    if (b === null) { await sleep(2); continue; }
-    if (b === 10) break;
-    if (b !== 13) bytes.push(b);
-  }
-  if (!bytes.length) throw new Error('Timeout o línea vacía esperando respuesta');
-  return dec.decode(new Uint8Array(bytes));
-}
-function explainFirmwareError(code) {
-  const map = { P:'Program fail Q4', E:'Erase fail Q5', T:'Timeout busy/status', R:'Timeout recibiendo bloque', C:'Comando/parámetros inválidos', B:'Bloque inválido/mayor a MAXW', A:'Alineación inválida', U:'Error desconocido', '?':'Comando no soportado' };
-  return map[code] || `Código ${code}`;
-}
+
 function byteCode(expected) {
   if (typeof expected === 'number') return expected & 0xFF;
   if (typeof expected === 'string' && expected.length === 1) return expected.charCodeAt(0);
-  throw new Error(`Token inválido: ${expected}`);
+  throw new Error(`Token inválido para waitForByte: ${expected}`);
 }
-async function readErrorCode() {
-  try { return String.fromCharCode(await readRawByte(300)); } catch { return '?'; }
-}
+
 async function waitForByte(expected, timeoutMs = Number($('timeoutMs').value)) {
   const expectedByte = byteCode(expected);
   const deadline = Date.now() + timeoutMs;
   while (Date.now() < deadline) {
-    const b = takeOneByte();
-    if (b === null) { await sleep(2); continue; }
-    if (b === 10 || b === 13) continue;
-    if (b === '!'.charCodeAt(0)) {
-      const code = await readErrorCode();
-      throw new Error(`Firmware respondió !${code}: ${explainFirmwareError(code)}`);
+    if (readQueue.length) {
+      const b = readQueue.shift();
+      if (b === expectedByte) return b;
+      // Ignorar CR/LF que pueden llegar por Serial.println
+      if (b === 10 || b === 13) continue;
+      log(`Byte inesperado mientras esperaba '${String.fromCharCode(expectedByte)}': 0x${b.toString(16).padStart(2, '0')} '${String.fromCharCode(b)}'`, 'warn');
+    } else {
+      await sleep(5);
     }
-    if (b === expectedByte) return b;
-    log(`Byte inesperado mientras esperaba '${String.fromCharCode(expectedByte)}': 0x${b.toString(16).padStart(2, '0')} '${String.fromCharCode(b)}'`, 'warn');
   }
   throw new Error(`Timeout esperando byte '${String.fromCharCode(expectedByte)}'`);
 }
-async function writeText(text) { if (!writer) throw new Error('No hay puerto conectado'); await writer.write(enc.encode(text)); }
-async function writeBytes(bytes) { if (!writer) throw new Error('No hay puerto conectado'); await writer.write(bytes); }
 
-async function firmwareVersion() {
-  clearRx(); setStatus('version');
-  await writeText('V
-');
-  const line = await readLine(3000);
-  log(`Firmware: ${line}`, line.includes('0.5E') ? 'oktext' : 'warn');
-  setStatus('idle');
+async function writeText(text) {
+  if (!writer) throw new Error('No hay puerto conectado');
+  await writer.write(enc.encode(text));
 }
+
+async function writeBytes(bytes) {
+  if (!writer) throw new Error('No hay puerto conectado');
+  await writer.write(bytes);
+}
+
 async function checkId() {
-  clearRx(); setStatus('check id');
-  await writeText('C
-');
+  clearRx();
+  setStatus('check id');
+  await writeText('C\n');
   const id = dec.decode(await readExact(4));
   log(`ID leído: ${id} ${id === 'C2F9' ? '(OK MX29L3211)' : '(distinto a C2F9)'}`, id === 'C2F9' ? 'oktext' : 'warn');
   setStatus('idle');
 }
-async function statusReg() {
-  clearRx(); setStatus('status');
-  await writeText('Q
-');
-  const sr = dec.decode(await readExact(4));
-  log(`Status Register Q: 0x${sr} (Q7 ready, Q5 erase fail, Q4 program fail)`, 'warn');
-  setStatus('idle');
-}
+
 async function eraseChip() {
   if (!confirm('Esto borrará la flash. ¿Continuar?')) return;
-  clearRx(); setStatus('erase'); setProgress(0, 1);
+  clearRx();
+  setStatus('erase');
+  setProgress(0, 1);
   log('Enviando comando E / erase...', 'warn');
-  await writeText('E
-');
+  await writeText('E\n');
   await waitForByte('%', Math.max(Number($('timeoutMs').value), 180000));
-  setProgress(1, 1); setEraseState(true);
-  log('Erase terminado. Skip FF queda habilitado para el próximo Write.', 'oktext');
+  setProgress(1, 1);
+  log('Erase terminado', 'oktext');
   setStatus('idle');
 }
 
@@ -603,55 +542,43 @@ function prepareImage() {
   let fillMode = $('fillMode').value;
   if (sourceFileBytes.length > chipSize) throw new Error(`El archivo excede el tamaño del chip (${chipSize} bytes)`);
   if (sourceFileBytes.length === chipSize && fillMode !== 'none') {
-    log('El archivo ya mide exactamente el tamaño del chip; se fuerza modo none.', 'warn');
-    fillMode = 'none'; $('fillMode').value = 'none';
+    log('El archivo ya mide exactamente el tamaño del chip; se fuerza modo none para evitar preparación innecesaria.', 'warn');
+    fillMode = 'none';
+    $('fillMode').value = 'none';
   }
-  if (fillMode === 'none') preparedBytes = sourceFileBytes.slice();
-  else {
+
+  if (fillMode === 'none') {
+    preparedBytes = sourceFileBytes.slice();
+  } else {
     preparedBytes = new Uint8Array(chipSize);
-    if (fillMode === 'ff') { preparedBytes.fill(0xFF); preparedBytes.set(sourceFileBytes, 0); }
-    else if (fillMode === 'repeat') {
+    if (fillMode === 'ff') preparedBytes.fill(0xFF);
+    if (fillMode === 'repeat') {
       for (let offset = 0; offset < chipSize; offset += sourceFileBytes.length) {
-        preparedBytes.set(sourceFileBytes.subarray(0, Math.min(sourceFileBytes.length, chipSize - offset)), offset);
+        preparedBytes.set(sourceFileBytes.slice(0, Math.min(sourceFileBytes.length, chipSize - offset)), offset);
       }
+    } else {
+      preparedBytes.set(sourceFileBytes, 0);
     }
   }
   $('preparedSize').textContent = preparedBytes.length.toLocaleString();
   log(`Imagen preparada: ${preparedBytes.length} bytes, modo ${fillMode}`, 'oktext');
 }
 
-function isAllFFRange(bytes, start, end) {
-  for (let i = start; i < end; i++) if (bytes[i] !== 0xFF) return false;
-  return true;
-}
-async function sendWriteSegment(offset, segment, pageSize, writeMode) {
-  const cmd = writeMode === 'fast' ? 'X' : 'W';
-  await writeText(`${cmd}${offset},${pageSize},${segment.length}
-`);
-  await waitForByte('&');
-  await writeBytes(segment);
-  await waitForByte('%', Math.max(Number($('timeoutMs').value), 30000));
-}
-
 async function writePrepared() {
   if (!preparedBytes) throw new Error('Prepara primero la imagen');
-  clearRx(); stopRequested = false;
+  clearRx();
+  stopRequested = false;
   const blockSize = Number($('writeBlock').value);
   const pageSize = Number($('pageSize').value);
   const delayMs = Number($('writeDelay').value);
   const writeMode = $('writeMode') ? $('writeMode').value : 'safe';
-  const skipFFEnabled = $('skipFF').checked && eraseDoneThisSession;
-  if ($('skipFF').checked && !eraseDoneThisSession) log('Skip FF solicitado, pero no hay Erase OK en esta sesión; se escribirá todo.', 'warn');
-
   setStatus('write');
-  log(`Inicio Write: ${preparedBytes.length} bytes, block=${blockSize}, page=${pageSize}, modo=${writeMode}, skipFF=${skipFFEnabled ? 'on' : 'off'}${pageSize === 256 ? ' [MX29L3211 native 128-word page]' : ' [fallback]'}`, 'warn');
+  log(`Inicio Write: ${preparedBytes.length} bytes, block=${blockSize}, page=${pageSize}, modo=${writeMode}${pageSize === 256 ? ' [MX29L3211 native 128-word page]' : ' [fallback]'}`, 'warn');
   beginPerf('write', preparedBytes.length, blockSize);
 
-  let skippedBytes = 0, programmedBytes = 0, segments = 0;
   if (writeMode === 'fast') {
-    log('FastWrite: enviando S / begin fast write...', 'warn');
-    await writeText('S
-');
+    log('FastWrite v0.4B: enviando S / begin fast write...', 'warn');
+    await writeText('S\n');
     await waitForByte('%', Math.max(Number($('timeoutMs').value), 30000));
   }
 
@@ -659,65 +586,43 @@ async function writePrepared() {
   try {
     for (let offset = 0; offset < preparedBytes.length; offset += blockSize, blockIndex++) {
       if (stopRequested) throw new Error('Operación detenida por el usuario');
-      const blockEnd = Math.min(offset + blockSize, preparedBytes.length);
-      const blockLen = blockEnd - offset;
-
-      if (!skipFFEnabled) {
-        const block = preparedBytes.subarray(offset, blockEnd);
-        await sendWriteSegment(offset, block, pageSize, writeMode);
-        programmedBytes += block.length; segments++;
-      } else {
-        let pos = offset;
-        while (pos < blockEnd) {
-          const pageEnd = Math.min(pos + pageSize, blockEnd);
-          if (isAllFFRange(preparedBytes, pos, pageEnd)) {
-            skippedBytes += pageEnd - pos;
-            pos = pageEnd;
-            continue;
-          }
-          const runStart = pos;
-          pos = pageEnd;
-          while (pos < blockEnd) {
-            const nextEnd = Math.min(pos + pageSize, blockEnd);
-            if (isAllFFRange(preparedBytes, pos, nextEnd)) break;
-            pos = nextEnd;
-          }
-          const segment = preparedBytes.subarray(runStart, pos);
-          await sendWriteSegment(runStart, segment, pageSize, writeMode);
-          programmedBytes += segment.length; segments++;
-        }
-      }
-
-      setProgress(offset + blockLen, preparedBytes.length);
-      const note = skipFFEnabled && skippedBytes ? `skipped=${skippedBytes}` : '';
-      recordPerf(blockIndex, offset, blockLen, note);
+      const block = preparedBytes.slice(offset, Math.min(offset + blockSize, preparedBytes.length));
+      const cmd = writeMode === 'fast' ? 'X' : 'W';
+      await writeText(`${cmd}${offset},${pageSize},${block.length}\n`);
+      await waitForByte('&'); // Arduino está listo para recibir el bloque binario
+      await writeBytes(block);
+      await waitForByte('%', Math.max(Number($('timeoutMs').value), 30000)); // Arduino terminó de grabar el bloque
+      setProgress(offset + block.length, preparedBytes.length);
+      recordPerf(blockIndex, offset, block.length);
       if (delayMs) await sleep(delayMs);
     }
 
     if (writeMode === 'fast') {
-      log('FastWrite: enviando Z / finish fast write...', 'warn');
-      await writeText('Z
-');
+      log('FastWrite v0.4B: enviando Z / finish fast write...', 'warn');
+      await writeText('Z\n');
       await waitForByte('%', Math.max(Number($('timeoutMs').value), 30000));
     }
   } catch (err) {
     if (writeMode === 'fast') {
       log('Error durante FastWrite. Intentando enviar Z para reset final...', 'warn');
-      try { await writeText('Z
-'); await waitForByte('%', 30000); } catch (finishErr) { log(`No se pudo cerrar FastWrite con Z: ${finishErr.message}`, 'errtext'); }
+      try {
+        await writeText('Z\n');
+        await waitForByte('%', 30000);
+      } catch (finishErr) {
+        log(`No se pudo cerrar FastWrite con Z: ${finishErr.message}`, 'err');
+      }
     }
-    setEraseState(false);
     throw err;
   }
 
   endPerf();
-  log(`Write terminado. Programado=${programmedBytes} bytes en ${segments} segmento(s). Saltado FF=${skippedBytes} bytes.`, 'oktext');
-  setEraseState(false); // Once written, skipFF cannot safely be reused without a new erase.
+  log('Write terminado', 'oktext');
   setStatus('idle');
 }
 
 async function readChip() {
-  clearRx(); stopRequested = false;
+  clearRx();
+  stopRequested = false;
   const chipSize = Number($('chipSize').value);
   const blockSize = Number($('readBlock').value);
   dumpBytes = new Uint8Array(chipSize);
@@ -728,96 +633,142 @@ async function readChip() {
   for (let offset = 0; offset < chipSize; offset += blockSize, blockNum++) {
     if (stopRequested) throw new Error('Operación detenida por el usuario');
     const size = Math.min(blockSize, chipSize - offset);
-    await writeText(`R${blockNum},${size}
-`);
+    await writeText(`R${blockNum},${size}\n`);
     const chunk = await readExact(size, Math.max(Number($('timeoutMs').value), 30000));
     dumpBytes.set(chunk, offset);
     setProgress(offset + size, chipSize);
     recordPerf(blockNum, offset, size);
   }
-  endPerf(); log('Read/Dump terminado', 'oktext'); setStatus('idle');
+  endPerf();
+  log('Read/Dump terminado', 'oktext');
+  setStatus('idle');
 }
+
 
 async function crcVerifyPrepared() {
   if (!preparedBytes) throw new Error('Prepara primero la imagen');
-  clearRx(); stopRequested = false;
+  clearRx();
+  stopRequested = false;
+  const chipSize = Number($('chipSize').value);
+  if (preparedBytes.length !== chipSize) {
+    log(`Advertencia: imagen preparada (${preparedBytes.length}) distinta al tamaño chip (${chipSize}); se verificará el tamaño de la imagen.`, 'warn');
+  }
   const size = preparedBytes.length;
   const localCrc = crc32(preparedBytes).toString(16).toUpperCase().padStart(8, '0');
-  setStatus('crc verify'); setProgress(0, 1); resetMetricUi();
-  log(`CRC Verify rápido v0.5E: local/preparada=${localCrc}. Solicitando CRC flash K0,${size}...`, 'warn');
+  setStatus('crc verify');
+  setProgress(0, 1);
+  resetMetricUi();
+  log(`CRC Verify rápido v0.5A: local/preparada=${localCrc}. Solicitando CRC flash K0,${size}...`, 'warn');
   const start = performance.now();
-  await writeText(`K0,${size}
-`);
-  const first = await readRawByte(Math.max(Number($('timeoutMs').value), 240000));
-  if (first === '!'.charCodeAt(0)) { const code = await readErrorCode(); throw new Error(`Firmware respondió !${code}: ${explainFirmwareError(code)}`); }
+  await writeText(`K0,${size}\n`);
+  const first = await readExact(1, Math.max(Number($('timeoutMs').value), 240000));
+  if (first[0] === '!'.charCodeAt(0)) throw new Error('Firmware respondió error al comando K/CRC');
   const rest = await readExact(7, Math.max(Number($('timeoutMs').value), 30000));
-  const bytes = new Uint8Array(8); bytes[0] = first; bytes.set(rest, 1);
+  const bytes = new Uint8Array(8);
+  bytes[0] = first[0];
+  bytes.set(rest, 1);
   const flashCrc = dec.decode(bytes).trim().toUpperCase();
   const elapsed = performance.now() - start;
-  setProgress(1, 1); $('elapsedText').textContent = fmtDuration(elapsed); $('etaText').textContent = '--'; $('speedText').textContent = fmtBytesPerSec(size / (elapsed / 1000));
-  if (!/^[0-9A-F]{8}$/.test(flashCrc)) throw new Error(`Respuesta CRC inválida del firmware: '${flashCrc}'`);
-  if (flashCrc === localCrc) log(`CRC Verify OK. flash=${flashCrc}, preparada=${localCrc}, tiempo=${fmtDuration(elapsed)}, velocidad lógica=${fmtBytesPerSec(size / (elapsed / 1000))}`, 'oktext');
-  else log(`CRC Verify FALLÓ. flash=${flashCrc}, preparada=${localCrc}, tiempo=${fmtDuration(elapsed)}`, 'errtext');
+  setProgress(1, 1);
+  $('elapsedText').textContent = fmtDuration(elapsed);
+  $('etaText').textContent = '--';
+  $('speedText').textContent = fmtBytesPerSec(size / (elapsed / 1000));
+  if (!/^[0-9A-F]{8}$/.test(flashCrc)) {
+    throw new Error(`Respuesta CRC inválida del firmware: '${flashCrc}'`);
+  }
+  if (flashCrc === localCrc) {
+    log(`CRC Verify OK. flash=${flashCrc}, preparada=${localCrc}, tiempo=${fmtDuration(elapsed)}, velocidad lógica=${fmtBytesPerSec(size / (elapsed / 1000))}`, 'oktext');
+  } else {
+    log(`CRC Verify FALLÓ. flash=${flashCrc}, preparada=${localCrc}, tiempo=${fmtDuration(elapsed)}`, 'errtext');
+  }
   setStatus('idle');
 }
 
 async function verifyPrepared() {
   if (!preparedBytes) throw new Error('Prepara primero la imagen');
-  clearRx(); stopRequested = false;
+  clearRx();
+  stopRequested = false;
   const blockSize = Number($('readBlock').value);
-  setStatus('verify'); log(`Inicio Verify: ${preparedBytes.length} bytes, readBlock=${blockSize}`, 'warn');
+  setStatus('verify');
+  log(`Inicio Verify: ${preparedBytes.length} bytes, readBlock=${blockSize}`, 'warn');
   beginPerf('verify', preparedBytes.length, blockSize);
   let blockNum = 0;
   for (let offset = 0; offset < preparedBytes.length; offset += blockSize, blockNum++) {
     if (stopRequested) throw new Error('Operación detenida por el usuario');
     const size = Math.min(blockSize, preparedBytes.length - offset);
-    await writeText(`R${blockNum},${size}
-`);
+    await writeText(`R${blockNum},${size}\n`);
     const chunk = await readExact(size, Math.max(Number($('timeoutMs').value), 30000));
-    for (let i = 0; i < size; i++) if (chunk[i] !== preparedBytes[offset + i]) {
-      const abs = offset + i;
-      throw new Error(`Verify failed en offset 0x${abs.toString(16).padStart(6, '0')}: flash=0x${chunk[i].toString(16).padStart(2, '0')} file=0x${preparedBytes[offset+i].toString(16).padStart(2, '0')}`);
+    for (let i = 0; i < size; i++) {
+      if (chunk[i] !== preparedBytes[offset + i]) {
+        const abs = offset + i;
+        throw new Error(`Verify failed en offset 0x${abs.toString(16).padStart(6, '0')}: flash=0x${chunk[i].toString(16).padStart(2, '0')} file=0x${preparedBytes[offset+i].toString(16).padStart(2, '0')}`);
+      }
     }
-    setProgress(offset + size, preparedBytes.length); recordPerf(blockNum, offset, size);
+    setProgress(offset + size, preparedBytes.length);
+    recordPerf(blockNum, offset, size);
   }
-  endPerf(); log('Verify OK: flash coincide con imagen preparada', 'oktext'); setStatus('idle');
+  endPerf();
+  log('Verify OK: flash coincide con imagen preparada', 'oktext');
+  setStatus('idle');
 }
+
 
 function crc32(bytes) {
   let table = crc32.table;
   if (!table) {
     table = new Uint32Array(256);
-    for (let i = 0; i < 256; i++) { let c = i; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); table[i] = c >>> 0; }
+    for (let i = 0; i < 256; i++) {
+      let c = i;
+      for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1);
+      table[i] = c >>> 0;
+    }
     crc32.table = table;
   }
   let crc = 0xFFFFFFFF;
   for (let i = 0; i < bytes.length; i++) crc = table[(crc ^ bytes[i]) & 0xFF] ^ (crc >>> 8);
   return (crc ^ 0xFFFFFFFF) >>> 0;
 }
+
 function compareDumpPrepared() {
   if (!dumpBytes) throw new Error('Primero genera un Read/Dump');
   if (!preparedBytes) throw new Error('Primero prepara o carga la imagen esperada');
   const total = Math.min(dumpBytes.length, preparedBytes.length);
   log(`Comparando dump (${dumpBytes.length} bytes) contra imagen preparada (${preparedBytes.length} bytes)...`, 'warn');
   if (dumpBytes.length !== preparedBytes.length) log('Advertencia: tamaños distintos; se comparará el rango común.', 'warn');
-  for (let i = 0; i < total; i++) if (dumpBytes[i] !== preparedBytes[i]) { log(`Diferencia en offset 0x${i.toString(16).padStart(6, '0')}: dump=0x${dumpBytes[i].toString(16).padStart(2, '0')} preparada=0x${preparedBytes[i].toString(16).padStart(2, '0')}`, 'errtext'); return; }
+  for (let i = 0; i < total; i++) {
+    if (dumpBytes[i] !== preparedBytes[i]) {
+      log(`Diferencia en offset 0x${i.toString(16).padStart(6, '0')}: dump=0x${dumpBytes[i].toString(16).padStart(2, '0')} preparada=0x${preparedBytes[i].toString(16).padStart(2, '0')}`, 'errtext');
+      return;
+    }
+  }
   const crcDump = crc32(dumpBytes).toString(16).toUpperCase().padStart(8, '0');
   const crcPrep = crc32(preparedBytes).toString(16).toUpperCase().padStart(8, '0');
   log(`Comparación OK. CRC32 dump=${crcDump}, preparada=${crcPrep}`, 'oktext');
 }
+
 function downloadBytes(bytes, name) {
   if (!bytes) throw new Error('No hay datos para descargar');
   const blob = new Blob([bytes], { type: 'application/octet-stream' });
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = name; document.body.appendChild(a); a.click();
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = name;
+  document.body.appendChild(a);
+  a.click();
   setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1000);
 }
-async function runGuard(fn) { try { await fn(); } catch (e) { log(e.message || String(e), 'errtext'); setStatus('error'); } }
+
+async function runGuard(fn) {
+  try {
+    await fn();
+  } catch (e) {
+    log(e.message || String(e), 'errtext');
+    setStatus('error');
+  }
+}
 
 $('connectBtn').addEventListener('click', () => runGuard(connect));
 $('disconnectBtn').addEventListener('click', () => runGuard(disconnect));
-$('versionBtn').addEventListener('click', () => runGuard(firmwareVersion));
 $('checkIdBtn').addEventListener('click', () => runGuard(checkId));
-$('statusBtn').addEventListener('click', () => runGuard(statusReg));
 $('eraseBtn').addEventListener('click', () => runGuard(eraseChip));
 $('writeBtn').addEventListener('click', () => runGuard(writePrepared));
 $('verifyBtn').addEventListener('click', () => runGuard(verifyPrepared));
@@ -833,18 +784,23 @@ $('compareDumpBtn').addEventListener('click', () => runGuard(async () => compare
 $('stopBtn').addEventListener('click', () => { stopRequested = true; log('Solicitud de detener enviada; se detendrá al finalizar el bloque actual.', 'warn'); });
 
 $('romFile').addEventListener('change', async (ev) => {
-  const file = ev.target.files[0]; if (!file) return;
+  const file = ev.target.files[0];
+  if (!file) return;
   const buf = await file.arrayBuffer();
-  sourceFileBytes = new Uint8Array(buf); preparedBytes = null; dumpBytes = null;
-  $('fileName').textContent = file.name; $('fileSize').textContent = sourceFileBytes.length.toLocaleString(); $('preparedSize').textContent = '0';
+  sourceFileBytes = new Uint8Array(buf);
+  preparedBytes = null;
+  $('fileName').textContent = file.name;
+  $('fileSize').textContent = sourceFileBytes.length.toLocaleString();
+  $('preparedSize').textContent = '0';
   log(`Archivo cargado: ${file.name}, ${sourceFileBytes.length} bytes`);
   const chipSize = Number($('chipSize').value);
-  if (sourceFileBytes.length === chipSize) { $('fillMode').value = 'none'; log('Archivo de tamaño exacto del chip: se seleccionó automáticamente modo none.', 'warn'); }
+  if (sourceFileBytes.length === chipSize) {
+    $('fillMode').value = 'none';
+    log('Archivo de tamaño exacto del chip: se seleccionó automáticamente modo none.', 'warn');
+  }
 });
 
-setEraseState(false);
-log('MegaBurner Web Serial v0.5E Final500K listo. Recomendado: Firmware V, Check ID, cargar ROM, preparar imagen, Erase, Write fast, CRC Verify rápido.');
+log('MegaBurner Web Serial v0.5A NativePage256 listo. Recomendado: conectar, Check ID, cargar ROM, preparar imagen, Erase, Write, Verify.');
 </script>
-
 </body>
 </html>

@@ -1,16 +1,15 @@
 /**
- * Mega Burner - WebSerial v0.5B Baud1M
+ * Mega Burner - WebSerial v0.5A NativePage256
  * Base: maximaas/MegaBurner / MX29L3211
  *
  * v0.4A: removed reset() before every read block.
  * v0.4B: adds a fast write transaction mode that avoids reset()+delay(500)
  *         after every 4096-byte block. Original safe W command remains available.
  * v0.4C: adds fast CRC32 verification directly on Arduino/flash via Koffset,size.
- * v0.5A: promotes pageSize=256 bytes as the recommended MX29L3211 16-bit native page profile.
- * v0.5B: raises the recommended serial baudrate to 1000000 for turbo read/write tests.
- *         Use only with the matching HTML baudrate; 500000 remains the fallback build/profile.
+ * v0.5A: keeps the same safe protocol and promotes pageSize=256 bytes
+ *         as the recommended MX29L3211 16-bit native page profile.
  *
- * Protocol v0.5B uses newline-terminated ASCII commands:
+ * Protocol v0.5A uses newline-terminated ASCII commands:
  *   C\n                    -> check id, returns 4 ASCII chars, e.g. C2F9
  *   E\n                    -> erase, returns %
  *   Rblock,size\n          -> read, returns size raw bytes
@@ -20,15 +19,15 @@
  *   Z\n                    -> finish fast write transaction, resets once, returns %
  *   Koffset,size\n         -> CRC32 over flash byte range, returns 8 ASCII hex chars
  *
- * Recommended HTML parameters for v0.5B:
- *   baudrate=1000000, writeBlock=4096, pageSize=256, readBlock=16384 or 32768
- * Fallbacks: firmware/profile at 500000 and pageSize=128 remain conceptually supported.
+ * Recommended HTML parameters for v0.5A:
+ *   baudrate=500000, writeBlock=4096, pageSize=256, readBlock=16384
+ * Fallback pageSize=128 remains supported by the same firmware.
  */
 
 #include "MX29L3211.h"
 #include <stdlib.h>
 
-#define SERIAL_BAUD 1000000
+#define SERIAL_BAUD 500000
 #define CMD_BUFFER_SIZE 64
 #define MAX_WRITE_BLOCK 4096
 #define SERIAL_ACK_READY '&'
