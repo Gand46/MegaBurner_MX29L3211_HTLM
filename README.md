@@ -225,7 +225,7 @@ Este repositorio no pretende borrar ni sustituir los créditos originales: docum
 
 ---
 
-# MegaBurner Web Serial v0.5E MX29L3211 — English
+# MegaBurner Web Serial v0.5A MX29L3211 — English
 
 HTML/Web Serial port of MegaBurner for programming, reading and verifying **MX29L3211 32 Mbit / 4 MB / 3.3 V** flash memories with an **Arduino Mega 2560**. The goal is to replace the original Java/SWT/RXTX/DLL PC application with a portable browser-based interface while keeping the 16-bit parallel flash programming concept inherited from MegaBurner/cartreader.
 
