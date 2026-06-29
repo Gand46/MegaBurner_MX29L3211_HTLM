@@ -1,8 +1,8 @@
-# MegaBurner Web Serial v0.5E MX29L3211
+# MegaBurner Web Serial v0.5A MX29L3211
 
 Port HTML/Web Serial de MegaBurner para programar, leer y verificar memorias **MX29L3211 32 Mbit / 4 MB / 3.3 V** usando **Arduino Mega 2560**. El objetivo del proyecto es reemplazar la aplicación de PC original basada en Java/SWT/RXTX/DLL por una interfaz web moderna, portable y ejecutable desde Chrome/Edge mediante Web Serial, conservando el enfoque de programación paralela de 16 bits del proyecto original.
 
-> Estado recomendado del proyecto: **v0.5E Final 500K**. El modo estable validado es **500000 baudios**, `pageSize=256`, `writeBlock=4096`, `readBlock=16384`, FastWrite, FastRead y FastCRC.
+> Estado recomendado del proyecto: **v0.5A**. El modo estable validado es **500000 baudios**, `pageSize=256`, `writeBlock=4096`, `readBlock=16384`, FastWrite, FastRead y FastCRC.
 
 ---
 
