@@ -48,46 +48,6 @@ Este port mantiene esa filosofía, pero reemplaza la aplicación Java de escrito
 
 ---
 
-## Estructura del repositorio
-
-```text
-MegaBurner-WebSerial-MX29L3211/
-├─ README.md
-├─ index.html
-├─ CHANGELOG.md
-├─ CONTRIBUTING.md
-├─ LICENSE_NOTES.md
-├─ firmware/
-│  ├─ current/
-│  │  ├─ MegaBurner.ino
-│  │  ├─ MX29L3211.cpp
-│  │  └─ MX29L3211.h
-│  └─ legacy/
-│     ├─ MegaBurner_v0_4A_FastRead/
-│     ├─ MegaBurner_v0_4B_FastWrite/
-│     ├─ MegaBurner_v0_4C_FastCRC/
-│     ├─ MegaBurner_v0_5A_NativePage256/
-│     └─ MegaBurner_v0_5E_Final500K/
-├─ web/
-│  ├─ index.html
-│  └─ releases/
-├─ docs/
-│  ├─ MANUAL_USO_ES.md
-│  ├─ MODIFICACION_MEGA2560_3V3.md
-│  ├─ PINOUT_MX29L3211_MEGA2560.md
-│  ├─ PROTOCOLO_SERIAL.md
-│  ├─ HISTORIAL_DESARROLLO.md
-│  ├─ BENCHMARKS.md
-│  ├─ ROADMAP.md
-│  ├─ CREDITOS.md
-│  └─ assets/original-megaburner/
-└─ hardware/
-   ├─ README.md
-   └─ pinout_mx29l3211_sop44_to_mega2560.csv
-```
-
----
-
 ## Modificación necesaria del Arduino Mega 2560
 
 **Advertencia:** la MX29L3211 es una memoria de 3.3 V. No se recomienda conectar directamente una MX29L3211 a un Arduino Mega 2560 funcionando a 5 V. El README original de MegaBurner indica expresamente que la primera etapa es convertir el Mega2560 a compatibilidad de 3.3 V.
