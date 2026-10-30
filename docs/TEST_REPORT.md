@@ -55,3 +55,7 @@ Resultado: `All multichip logic tests passed`.
 ## Limitación honesta
 
 No es posible garantizar ausencia total de errores de hardware sin probar cada perfil en el chip físico, fuente, socket y placa concretos. La rama MX29LV160CT se entrega bloqueada en modo Safe y marcada experimental hasta completar Check ID, erase, write, CRC y doble dump.
+
+## Relación con PCB R4.9
+
+Esta documentación de pruebas v0.7A es previa a la integración de los archivos KiCad. Se añade una validación **estática** de las 44 asignaciones declaradas en KiCad/CSV, los tres perfiles y las rutas de alimentación en [`INTEGRATION_VALIDATION.md`](INTEGRATION_VALIDATION.md). No se realizó prueba de encendido, montaje ni grabación física sobre una R4.9 terminada.

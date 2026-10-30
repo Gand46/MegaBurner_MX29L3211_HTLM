@@ -1,0 +1,20 @@
+MegaBurner MultiChip v0.7A + PCB R4.9-2L-FINAL / docs.1
+Fecha auditoria: 2026-10-30
+Aporte original: Archivo(2).zip, MegaBurner_MultiChip_v0_7A_ProfileSafe(1).zip, MegaBurner_MX26L6420_Mega2560_Direct3V3_Economy_PCB-R4.9-2L-FINAL(1).zip
+Comprobaciones ejecutadas:
+- CRC de tres ZIPs: OK
+- SHA256SUMS internos PCB + v0.7A: OK (antes de modificar docs y lanzador)
+- Pruebas de firmware host stubs, lógica, máquinas de estado, estructura HTML, SRAM estática y JavaScript: PASS
+- Correspondencia 44 J1 CSV / 44 pads KiCad: PASS
+- Comparación 3 perfiles de función variable/ID/tamaño contra JSON y firmware: PASS
+- Hashes de PCB cotejados: 38 PASS
+- Comparación de bytes de firmware, baselines, web, config, index.html, VERSION, LICENSE con originales: EXACTA
+- Comparación PCB completo con originales: EXACTA
+- Enlaces de Markdown activo comprobados: 71, sin fallos
+- Archivo histórico: 21 recursos de documentación/imágenes preservados, excepto metadatos macOS
+Pruebas NO realizadas:
+- Compilación con core Arduino AVR (arduino-cli no disponible aquí)
+- DRC/Electrical Rule Check nativo de KiCad (no kicad-cli instalado)
+- Prueba eléctrica y montaje R4.9, adaptador SA638, flash real, medición de voltajes o grabación
+- Validación física de MX29LV160CTMC-90
+Reproducir suite desde la raíz: bash tests/run_all.sh

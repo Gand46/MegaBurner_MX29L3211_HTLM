@@ -39,3 +39,9 @@ La ruta conserva el algoritmo v0.1 validado. La verificación final mediante dum
 - FastWrite: bloqueado hasta validación física.
 
 El driver mantiene RESET# y BYTE# altos, preserva PL4 como WE al actualizar A16–A19 y verifica cada bloque después de programarlo. Las palabras corregibles se reintentan hasta dos veces.
+
+## Compatibilidad con el PCB R4.9
+
+Todos los perfiles usan el **mismo conector J1** y las mismas posiciones físicas. P1, P33 y P44 cambian **funcionalmente** por perfil; las etiquetas de cobre son nombres históricos orientados al MX26L6420, no un circuito de adaptación. El PCB tampoco detecta el componente automáticamente. Referencia: [pinout y condiciones de conexión](PCB_R49_WIRING_AND_POWER.md).
+
+`hardwareValidated` en `config/chips.json` refleja pruebas anteriores con chips/perfiles, **no** una certificación física del shield R4.9.

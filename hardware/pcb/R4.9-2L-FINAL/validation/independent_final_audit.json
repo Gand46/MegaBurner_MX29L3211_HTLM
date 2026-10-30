@@ -1,0 +1,81 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "scope": "PCB-only release: pinout, power-source reroute, topology, DRC, CAM, drill and silkscreen",
+  "baseline": "R4.8-2L-FINAL",
+  "electrical": {
+    "physical_J1_pins": 44,
+    "unique_connected_nets": 43,
+    "opens": 0,
+    "J1_23_net": "+3V3",
+    "source_header_pad": "JMEGA.POWER/5V",
+    "source_header_net": "+3V3",
+    "isolated_header_pad": "JMEGA.POWER/3V3",
+    "isolated_header_net": "",
+    "changed_segment_nets": [
+      "+3V3"
+    ],
+    "changed_via_nets": [],
+    "power_segments": 14,
+    "power_vias": 0,
+    "power_length_mm": 74.112
+  },
+  "geometry": {
+    "segments": 975,
+    "vias": 51,
+    "pads": 130,
+    "pth": 181,
+    "npth": 0,
+    "unused_mega_header_positions": 39,
+    "single_face_vias": 0,
+    "dangling_track_endpoints": 0,
+    "zero_length_segments": 0,
+    "duplicate_segments": 0
+  },
+  "silkscreen": {
+    "labels": 136,
+    "label_pairs_below_0_250_mm": 0,
+    "label_graphic_pairs_below_0_250_mm": 0,
+    "edge_labels_below_0_250_mm": 0,
+    "minimum_label_label_gap_mm": 0.295,
+    "minimum_label_graphic_gap_mm": 0.26,
+    "minimum_label_edge_gap_mm": 0.68,
+    "mask_opening_intersections": 0
+  },
+  "cam": {
+    "resolutions_mm": [
+      0.01,
+      0.02
+    ],
+    "source_free_components": {
+      "F.Cu": 0,
+      "B.Cu": 0
+    },
+    "missing_sources": {
+      "F.Cu": 0,
+      "B.Cu": 0
+    },
+    "shorts": {
+      "F.Cu": 0,
+      "B.Cu": 0
+    },
+    "stable_cam_files": [
+      "-F_Cu.gtl",
+      "-F_Mask.gts",
+      "-B_Mask.gbs",
+      "-B_Silkscreen.gbo",
+      "-Edge_Cuts.gm1",
+      "-PTH.drl"
+    ],
+    "stable_cam_sha256": {
+      "-F_Cu.gtl": "e5442777a25b97ddaa3c733251d3642b25abee694c311a871384db731ba30a8c",
+      "-F_Mask.gts": "c8772d59868b97ec425b0f9fd801e350f013b5dc4e3dec34cb5362e16b63d171",
+      "-B_Mask.gbs": "d5e2924cd9ed83866513112d6126bdd770b5c632dd3802ef4a2d4bea7a3b0d09",
+      "-B_Silkscreen.gbo": "da4d81bc6c4355146a687cc469a3b9d0f18491f2cfdf9c05ed018a0f2d1da65c",
+      "-Edge_Cuts.gm1": "a63f436779d4e72138edefd88fdf53638dc8d5cfd668b362a3bd290db4ddafa5",
+      "-PTH.drl": "ec4ea3af645f7631bb0ec849c2ac9ce3d3d68e74a90573abefec5b4c8df09bea"
+    },
+    "gerber_files": 8,
+    "zip_crc": "PASS"
+  }
+}

@@ -1,0 +1,830 @@
+=== CAM 0.01 mm ===
+F.Cu / MegaBurner_R4_9_2L_FINAL-F_Cu.gtl
+  raster=0.010 mm; copper_components=126
+  design_sources=801; missing_source_pixels=0
+  source_components=126; shorts=0; split_nets_on_layer=28
+  source_free_components=0; area=0.0000 mm^2; largest=0.0000 mm^2
+  source_free_area_thresholds=>=0.01mm^2:0, >=0.1mm^2:0, >=1mm^2:0
+  split_on_layer={'GND': {96, 10, 11, 46, 87, 28, 29, 30, 31}, 'A21': {53, 110}, 'CE': {41, 43, 52, 45}, 'OE': {32, 47, 119}, '+3V3': {9, 94}, 'A0': {42, 13}, 'A1': {44, 14}, 'A2': {27, 15}, 'A8': {26, 19}, 'A10': {82, 35, 21}, 'A12': {48, 83, 22}, 'A14': {24, 73}, 'A15': {25, 50, 84}, 'Q8': {65, 57}, 'Q9': {49, 101, 38}, 'Q10': {75, 100, 60}, 'Q11': {77, 62}, 'Q12': {99, 92}, 'Q15': {88, 98}, 'Q6': {89, 97}, 'Q5': {91, 95}, 'Q3': {76, 61}, 'Q1': {58, 70}, 'A20': {64, 74, 80}, 'A19': {81, 51}, 'A18': {1, 54}, 'A17': {55, 39}, 'A16': {40, 85}}
+B.Cu / MegaBurner_R4_9_2L_FINAL-B_Cu.gbl
+  raster=0.010 mm; copper_components=137
+  design_sources=536; missing_source_pixels=0
+  source_components=137; shorts=0; split_nets_on_layer=40
+  source_free_components=0; area=0.0000 mm^2; largest=0.0000 mm^2
+  source_free_area_thresholds=>=0.01mm^2:0, >=0.1mm^2:0, >=1mm^2:0
+  split_on_layer={'GND': {102, 8, 115, 54, 24, 25, 88}, 'WE': {122, 87}, 'CE': {37, 38, 39, 53, 120}, 'OE': {26, 27, 55}, 'A0': {10, 52}, 'A1': {51, 11}, 'A2': {50, 12}, 'A3': {49, 13}, 'A4': {48, 14}, 'A5': {47, 15}, 'A6': {16, 46}, 'A7': {17, 45}, 'A8': {2, 82}, 'A9': {18, 83}, 'A10': {1, 42}, 'A11': {19, 84}, 'A12': {67, 20}, 'A13': {85, 21}, 'A14': {86, 68, 22}, 'A15': {69, 23}, 'Q8': {57, 111}, 'Q9': {32, 33, 59}, 'Q10': {105, 61}, 'Q11': {110, 63}, 'Q12': {104, 108, 95}, 'Q13': {93, 109}, 'Q14': {106, 91}, 'Q15': {89, 107, 100}, 'Q7': {90, 103}, 'Q6': {92, 101}, 'Q5': {97, 94}, 'Q4': {96, 98}, 'Q3': {62, 79}, 'Q2': {80, 60}, 'Q1': {58, 77}, 'Q0': {56, 78}, 'A20': {81, 66, 99, 70}, 'A18': {41, 36}, 'A17': {34, 44}, 'A16': {64, 35}}
+
+=== CAM 0.02 mm ===
+F.Cu / MegaBurner_R4_9_2L_FINAL-F_Cu.gtl
+  raster=0.020 mm; copper_components=126
+  design_sources=801; missing_source_pixels=0
+  source_components=126; shorts=0; split_nets_on_layer=28
+  source_free_components=0; area=0.0000 mm^2; largest=0.0000 mm^2
+  source_free_area_thresholds=>=0.01mm^2:0, >=0.1mm^2:0, >=1mm^2:0
+  split_on_layer={'GND': {96, 10, 11, 46, 87, 28, 29, 30, 31}, 'A21': {53, 110}, 'CE': {41, 43, 52, 45}, 'OE': {32, 47, 119}, '+3V3': {9, 94}, 'A0': {42, 13}, 'A1': {44, 14}, 'A2': {27, 15}, 'A8': {26, 19}, 'A10': {82, 35, 21}, 'A12': {48, 83, 22}, 'A14': {24, 73}, 'A15': {25, 50, 84}, 'Q8': {65, 57}, 'Q9': {49, 101, 38}, 'Q10': {75, 100, 60}, 'Q11': {77, 62}, 'Q12': {99, 92}, 'Q15': {88, 98}, 'Q6': {89, 97}, 'Q5': {91, 95}, 'Q3': {76, 61}, 'Q1': {58, 70}, 'A20': {64, 74, 80}, 'A19': {81, 51}, 'A18': {1, 54}, 'A17': {55, 39}, 'A16': {40, 85}}
+B.Cu / MegaBurner_R4_9_2L_FINAL-B_Cu.gbl
+  raster=0.020 mm; copper_components=137
+  design_sources=536; missing_source_pixels=0
+  source_components=137; shorts=0; split_nets_on_layer=40
+  source_free_components=0; area=0.0000 mm^2; largest=0.0000 mm^2
+  source_free_area_thresholds=>=0.01mm^2:0, >=0.1mm^2:0, >=1mm^2:0
+  split_on_layer={'GND': {102, 8, 115, 54, 24, 25, 88}, 'WE': {122, 87}, 'CE': {37, 38, 39, 53, 120}, 'OE': {26, 27, 55}, 'A0': {10, 52}, 'A1': {51, 11}, 'A2': {50, 12}, 'A3': {49, 13}, 'A4': {48, 14}, 'A5': {47, 15}, 'A6': {16, 46}, 'A7': {17, 45}, 'A8': {2, 82}, 'A9': {18, 83}, 'A10': {1, 42}, 'A11': {19, 84}, 'A12': {67, 20}, 'A13': {85, 21}, 'A14': {86, 68, 22}, 'A15': {69, 23}, 'Q8': {57, 111}, 'Q9': {32, 33, 59}, 'Q10': {104, 61}, 'Q11': {110, 63}, 'Q12': {108, 103, 95}, 'Q13': {93, 109}, 'Q14': {106, 91}, 'Q15': {89, 107, 100}, 'Q7': {105, 90}, 'Q6': {92, 101}, 'Q5': {97, 94}, 'Q4': {96, 98}, 'Q3': {62, 79}, 'Q2': {80, 60}, 'Q1': {58, 77}, 'Q0': {56, 78}, 'A20': {81, 66, 99, 70}, 'A18': {41, 36}, 'A17': {34, 44}, 'A16': {64, 35}}
+
+=== CLEARANCE / CONNECTIVITY ===
+F.Cu: 801 copper primitives; 0 clearances below 0.127 mm
+  capsule-capsule     0.250000 mm | track A3 (61.0,51.25)->(61.0,50.75) <> track A4 (61.5,50.25)->(61.0,50.25)
+  capsule-circle      0.135000 mm | pad J1.5 <> track CE (37.5,36.0)->(37.5,34.75)
+  capsule-rectangle   0.225000 mm | pad J1.1 <> track CE (30.0,35.0)->(29.75,35.0)
+  circle-circle       0.154648 mm | pad J1.2 <> via CE (31.5,37.0)
+  circle-rectangle    0.740000 mm | pad J1.1 <> pad J1.2
+B.Cu: 536 copper primitives; 0 clearances below 0.127 mm
+  capsule-capsule     0.184017 mm | track A19 (84.0,34.75)->(83.75,34.75) <> track +3V3 (83.25,36.25)->(83.25,35.0)
+  capsule-circle      0.135000 mm | pad J1.23 <> track A19 (83.0,33.75)->(83.0,19.5)
+  circle-circle       0.154648 mm | pad J1.2 <> via CE (31.5,37.0)
+  circle-rectangle    0.740000 mm | pad J1.1 <> pad J1.2
+Connectivity of active pads using explicit pads/tracks/vias (zones excluded):
+  checked 43 nets; opens=0
+
+=== SILK / MASK ===
+silk primitives=12094; mask openings=130
+mask openings intersected by supplied top silk=0
+affected=
+
+=== SILK / SILK / GRAPHICS / EDGE ===
+labels=136; gerber_label_groups=136; gerber_lines=6
+label_label_pairs_below_0.250mm=0
+label_graphic_pairs_below_0.250mm=0
+edge_labels_below_0.250mm=0
+minimum_label_label_gap_mm=0.295
+minimum_label_graphic_gap_mm=0.260
+minimum_label_edge_gap_mm=0.680
+status=PASS
+
+=== VIA FACE MAP ===
+[
+  {
+    "net": "A1",
+    "x": 51.25,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A0",
+    "x": 50.5,
+    "y": 38.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A2",
+    "x": 52.0,
+    "y": 49.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A17",
+    "x": 65.0,
+    "y": 34.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A12",
+    "x": 70.5,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A12",
+    "x": 66.0,
+    "y": 34.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q1",
+    "x": 69.25,
+    "y": 27.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q6",
+    "x": 69.25,
+    "y": 18.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q3",
+    "x": 79.25,
+    "y": 23.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A15",
+    "x": 73.0,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A15",
+    "x": 66.0,
+    "y": 33.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q10",
+    "x": 78.0,
+    "y": 16.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q10",
+    "x": 76.75,
+    "y": 23.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A16",
+    "x": 75.5,
+    "y": 34.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A8",
+    "x": 33.75,
+    "y": 50.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A10",
+    "x": 33.0,
+    "y": 44.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A10",
+    "x": 33.0,
+    "y": 37.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A14",
+    "x": 75.25,
+    "y": 33.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A14",
+    "x": 54.75,
+    "y": 25.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q5",
+    "x": 74.25,
+    "y": 18.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q9",
+    "x": 73.75,
+    "y": 39.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q9",
+    "x": 71.75,
+    "y": 39.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q9",
+    "x": 71.75,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "CE",
+    "x": 31.5,
+    "y": 37.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "CE",
+    "x": 36.75,
+    "y": 37.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "CE",
+    "x": 45.5,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "CE",
+    "x": 49.75,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "CE",
+    "x": 54.5,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "CE",
+    "x": 56.0,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q8",
+    "x": 63.25,
+    "y": 32.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "OE",
+    "x": 73.75,
+    "y": 45.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "OE",
+    "x": 63.5,
+    "y": 45.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "OE",
+    "x": 61.5,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q15",
+    "x": 73.75,
+    "y": 15.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q15",
+    "x": 61.5,
+    "y": 18.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A20",
+    "x": 75.0,
+    "y": 32.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A20",
+    "x": 55.75,
+    "y": 25.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A20",
+    "x": 43.75,
+    "y": 18.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A20",
+    "x": 30.5,
+    "y": 18.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q11",
+    "x": 62.0,
+    "y": 22.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "A18",
+    "x": 31.0,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q12",
+    "x": 76.75,
+    "y": 11.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "Q12",
+    "x": 76.75,
+    "y": 16.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 65.5,
+    "y": 5.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 73.75,
+    "y": 46.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 63.5,
+    "y": 46.5,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 59.0,
+    "y": 38.0,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 50.0,
+    "y": 46.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 54.5,
+    "y": 46.75,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 42.25,
+    "y": 17.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  },
+  {
+    "net": "GND",
+    "x": 59.0,
+    "y": 17.25,
+    "faces": {
+      "F": {
+        "tracks": 1,
+        "pads": 0
+      },
+      "B": {
+        "tracks": 1,
+        "pads": 0
+      }
+    }
+  }
+]

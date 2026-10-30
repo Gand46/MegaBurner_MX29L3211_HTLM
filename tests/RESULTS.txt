@@ -1,6 +1,0 @@
-Host C++ compile OK
-All multichip logic tests passed
-State-machine tests passed
-HTML structure tests passed
-Memory/safety tests passed; conservative static SRAM estimate=4368 bytes
-ALL TESTS PASSED

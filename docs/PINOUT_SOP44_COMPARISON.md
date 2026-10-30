@@ -28,3 +28,5 @@
 - MX29L3211 pulsa WE en PH4 y usa PL4 como A20.
 - MX26L6420 usa PH4 como A21, pulsa WE en PH3 y usa PL4 como A20.
 - MX29LV160CT mantiene PH4 como RESET#, PH3 como BYTE# y pulsa WE en PL4; solo PL0–PL3 transportan A16–A19.
+
+**Fuente de autoridad para la placa R4.9:** [`../hardware/pcb/R4.9-2L-FINAL/docs/NETLIST_AND_PINOUT.csv`](../hardware/pcb/R4.9-2L-FINAL/docs/NETLIST_AND_PINOUT.csv). Para los pines de potencia y los 44 contactos consultar [tabla integral con condiciones de seguridad](PCB_R49_WIRING_AND_POWER.md). El pin 13 es GND, el 23 es VCC 3,3 V, el 32 es GND, y el 38 es A12. La documentación heredada v0.5A contiene errores y no es autoridad para montar el PCB.

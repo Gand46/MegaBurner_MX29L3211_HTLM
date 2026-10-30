@@ -27,3 +27,7 @@ Todos los comandos terminan en `\n`. Baudrate: 500000.
 - Fast no soportado: `!F`.
 - Page-size incompatible: `!G`.
 - Alineación/rango: `!A`, `!B`, `!O`.
+
+## Migración desde v0.5A
+
+En v0.7A los comandos `P1,3211`, `P2,6420` o `P3,160C` deben preceder a `C`. El antiguo `Q` de estado del chip se sustituyó por información del **perfil/cerrojos** y `L` antiguo (Clear Status) no forma parte del protocolo actual. El operador no debe usar scripts seriales de v0.5A contra esta versión. Ver [`PROTOCOLO_MIGRACION.md`](PROTOCOLO_MIGRACION.md).

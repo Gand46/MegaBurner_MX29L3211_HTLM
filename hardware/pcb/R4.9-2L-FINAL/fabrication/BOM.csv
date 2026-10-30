@@ -1,0 +1,3 @@
+References,Value/MPN,Qty,Package,Notes
+J1,SA638-B006 / SDP-UNIV-44PS adapter,1,"DIP44 male pins; 2.54mm, 600mil rows",Solder the adapter directly to the shield; match pin 1
+JMEGA,Arduino Mega 2560 R3 shield header set,1 set,2.54mm long-tail/stacking male,"Full 86-position mating set, including POWER NC and 2x18 center header"

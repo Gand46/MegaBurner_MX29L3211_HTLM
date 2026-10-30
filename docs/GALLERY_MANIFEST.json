@@ -1,0 +1,89 @@
+{
+  "note": "Images were supplied in Megaburner.zip and optimized for GitHub README. External commercial reference photos require rights review before public publication.",
+  "assets": [
+    {
+      "asset": "assets/gallery/mega-controller.jpg",
+      "source_gallery_name": "20260627_220156.jpg",
+      "source_sha256": "93d0e83f20d027e90c94c9b128350e1343cc897ac4565a29c035f29f580db550",
+      "asset_sha256": "83dca222369a6aa4fd0ff901f92fada22b1979b595240151ee5cfc34927cca36",
+      "description": "Mega 2560 prototype, component side / Mega 2560, cara de componentes"
+    },
+    {
+      "asset": "assets/gallery/mega-3v-converter.jpg",
+      "source_gallery_name": "20260627_220208.jpg",
+      "source_sha256": "f229de72a0b667014d1e961a0a15a87bc42f2604f6b209d71ce77c8c31a1d2e9",
+      "asset_sha256": "6657092920f363980d84e94ea450c862d16ea1e6a0c6379816f4c7936a4a1e80",
+      "description": "Added DC-DC module behind Mega / Módulo DC-DC agregado bajo Mega"
+    },
+    {
+      "asset": "assets/gallery/mega-power-underside.jpg",
+      "source_gallery_name": "20260530_200917.jpg",
+      "source_sha256": "46a74ba0acedf122280746fbe8c17cf69e1ca17ad3c56b2a20673c4bdbd3c16c",
+      "asset_sha256": "b97740869eeaf06d927074677774c67bc81a58923e3b0ae9c60b71c4cfac0f96",
+      "description": "Underside, taped converter and power routing / Vista inferior con convertidor"
+    },
+    {
+      "asset": "assets/gallery/prototype-components.jpg",
+      "source_gallery_name": "20260530_202244.jpg",
+      "source_sha256": "18d7f171995dd5572a985e1f21062d2e23a3cc7cde1a8de7169e7d018deec30b",
+      "asset_sha256": "a3ecb8fe403aad1bb07b6c30f111b6606d264e4504e8e3a2a18df44d8713cf26",
+      "description": "Mega and original prototype separated / Mega y prototipo original separados"
+    },
+    {
+      "asset": "assets/gallery/prototype-wiring.jpg",
+      "source_gallery_name": "20260627_220148.jpg",
+      "source_sha256": "80a73f03078e86e9b451576396f4f462d4478faba8df9c81a3c1f4cc77812b3a",
+      "asset_sha256": "353a692b2843741e672089c34cba7ecaf32f3f078635d6690af19b358ed78e89",
+      "description": "Hand-wired underside / Cableado artesanal inferior"
+    },
+    {
+      "asset": "assets/gallery/prototype-top.jpg",
+      "source_gallery_name": "02-Mega-prototype.jpg",
+      "source_sha256": "10f6275149737fbc9ba7a863c1100f2940de9a080ce37557dfb84eddff9227a4",
+      "asset_sha256": "0c328934ba008247f7a54fdb08913856d0fbb6cf234ed8bd6d4d23af04f14166",
+      "description": "Prototype socket assembly / Ensamblaje del zócalo del prototipo"
+    },
+    {
+      "asset": "assets/gallery/socket-adapter.jpg",
+      "source_gallery_name": "01-SA638-B006.jpg",
+      "source_sha256": "59cc7fc9776ade04f38d9f73f2f6864a4c82514ac6139b4d3b67741876a24f6b",
+      "asset_sha256": "94ce37e4db87d3dde3eba212f00182aec3c5d823eaf71d6b7445d83c73c774a2",
+      "description": "SA638-B006 commercial socket reference / Referencia comercial SA638-B006"
+    },
+    {
+      "asset": "assets/gallery/socket-mounted.jpg",
+      "source_gallery_name": "03-adapter-over-Mega.jpg",
+      "source_sha256": "6a22f51640d25ab10fa37b376c2ab4cff3f3f4c7525c9fa5fc595efca7fcdacc",
+      "asset_sha256": "ff872d1fbe6f97606cef7a0b2bd7a0d1c853a6c42e011a0bfbcce5c69acc09d8",
+      "description": "SOP44 socket mounted on prototyping board / Zócalo en placa de prototipado"
+    },
+    {
+      "asset": "assets/gallery/chip-installed.jpg",
+      "source_gallery_name": "20260627_220239.jpg",
+      "source_sha256": "4b9c31c51448595744b9892e2c3a409521621f56c60a89e51eb5e3b130b88221",
+      "asset_sha256": "bd2dd90aa836d54144eb459c23fa0215285a12a3ff864db7f4fe4645442048ed",
+      "description": "Macronix memory in socket / Memoria Macronix instalada"
+    },
+    {
+      "asset": "assets/gallery/prototype-angle.jpg",
+      "source_gallery_name": "20260530_200923.jpg",
+      "source_sha256": "170cb634ff937760717c2d70949cb5add8b861cb8ea6bb99d01a38fd1e9ed92c",
+      "asset_sha256": "7fc8a0f62823805405cfc46a8684616c2c1c0d624e83367d80c25c9d318c86c0",
+      "description": "Angled view of prototype socket / Vista oblicua del zócalo"
+    },
+    {
+      "asset": "assets/gallery/prototype-pair.jpg",
+      "source_gallery_name": "20260530_202219.jpg",
+      "source_sha256": "8afbcaff08f8b3c569103fd1f24a81153828f352d5ffbbf04ba2706721c830db",
+      "asset_sha256": "57d849e59c4adc0803b4c5599b4fe882c2824f3574eb63a744adb5a2dba493f3",
+      "description": "Mega controller beside prototype / Controlador y prototipo"
+    },
+    {
+      "asset": "assets/gallery/pcb-r49-preview.png",
+      "source_gallery_name": "PCB_preview.png",
+      "source_sha256": "1e8e7df27b0139394f190182972701952966c0b35049accff41361afbb3ea367",
+      "asset_sha256": "6dc0108edb43485defec9f7094d885a5dc168d7a4b5a1bca57ec22fc72d2699c",
+      "description": "R4.9 routing artwork preview, not assembled hardware / Diseño R4.9, no hardware ensamblado"
+    }
+  ]
+}
