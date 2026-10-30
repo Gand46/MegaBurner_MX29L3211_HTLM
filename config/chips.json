@@ -1,0 +1,53 @@
+[
+  {
+    "id": 1,
+    "key": "3211",
+    "name": "MX29L3211",
+    "sizeBytes": 4194304,
+    "manufacturerId": "00C2",
+    "deviceId": "00F9",
+    "pageSizes": [256, 128],
+    "defaultPageSize": 256,
+    "defaultReadBlock": 16384,
+    "defaultWriteBlock": 4096,
+    "fastWrite": true,
+    "hardwareValidated": true,
+    "pin1": "WE# / D7 / PH4",
+    "pin33": "BYTE# / D6 / PH3",
+    "pin44": "A20 / D45 / PL4"
+  },
+  {
+    "id": 2,
+    "key": "6420",
+    "name": "MX26L6420MC-90",
+    "sizeBytes": 8388608,
+    "manufacturerId": "00C2",
+    "deviceId": "22FC",
+    "pageSizes": [2],
+    "defaultPageSize": 2,
+    "defaultReadBlock": 16384,
+    "defaultWriteBlock": 4096,
+    "fastWrite": true,
+    "hardwareValidated": true,
+    "pin1": "A21 / D7 / PH4",
+    "pin33": "WE# / D6 / PH3",
+    "pin44": "A20 / D45 / PL4"
+  },
+  {
+    "id": 3,
+    "key": "160C",
+    "name": "MX29LV160CTMC-90",
+    "sizeBytes": 2097152,
+    "manufacturerId": "00C2",
+    "deviceId": "22C4",
+    "pageSizes": [2],
+    "defaultPageSize": 2,
+    "defaultReadBlock": 16384,
+    "defaultWriteBlock": 4096,
+    "fastWrite": false,
+    "hardwareValidated": false,
+    "pin1": "RESET# / D7 / PH4",
+    "pin33": "BYTE# / D6 / PH3",
+    "pin44": "WE# / D45 / PL4"
+  }
+]

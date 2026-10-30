@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MegaBurner Web Serial MX26L6420 Socket v0.1</title>
+<style>
+:root{--xp-blue:#245edb;--xp-blue2:#0f3f9f;--xp-bg:#ece9d8;--panel:#f5f4ea;--border:#7f9db9;--text:#111;--ok:#0a7a14;--warn:#a45a00;--err:#b00000}
+*{box-sizing:border-box} body{margin:0;font:12px Tahoma,Arial,sans-serif;background:var(--xp-bg);color:var(--text)}
+.titlebar{background:linear-gradient(#3d8bfd,#1455c6 45%,#0f3f9f);color:white;padding:7px 10px;font-weight:bold;font-size:13px;text-shadow:1px 1px #003b80}
+.app{display:grid;grid-template-columns:minmax(420px,1.2fr) minmax(360px,.8fr);gap:8px;padding:8px;height:calc(100vh - 30px)}
+.group{border:1px solid #8a8a8a;background:var(--panel);padding:8px;margin-bottom:8px;box-shadow:inset 1px 1px white,inset -1px -1px #c7c7c7;border-radius:3px}
+.group h2{font-size:12px;margin:0 0 6px;color:#003399;background:linear-gradient(90deg,#dbe9ff,transparent);padding:3px 5px;border-radius:2px}
+.row{display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:5px 0}.row label{min-width:110px}.small label{min-width:auto}
+input[type=file]{font-size:11px;max-width:100%} select,input[type=number]{font:12px Tahoma,Arial,sans-serif;padding:2px;border:1px solid var(--border);background:white}input[type=number]{width:105px}
+button{font:12px Tahoma,Arial,sans-serif;padding:3px 9px;border:1px solid #003c74;border-radius:3px;background:linear-gradient(#fff,#d7e8ff 48%,#a5c7f6 52%,#eef6ff);min-height:24px;cursor:pointer}button:hover{filter:brightness(1.05)}button:disabled{color:#777;background:#ddd;border-color:#aaa;cursor:not-allowed}.danger{border-color:#8b0000;background:linear-gradient(#fff,#ffdada 50%,#ffb5b5 52%,#fff)}.okbtn{border-color:#0b6c11;background:linear-gradient(#fff,#d9ffd9 50%,#a8eca8 52%,#fff)}
+.tabs{display:flex;margin-bottom:6px}.tab{border:1px solid #777;background:#e6e6e6;padding:5px 12px;margin-right:2px;border-bottom:none;border-radius:4px 4px 0 0;cursor:pointer}.tab.active{background:var(--panel);font-weight:bold;color:#003399}.tabpage{display:none}.tabpage.active{display:block}
+.logbox{height:calc(100vh - 145px);min-height:360px;background:#071428;color:#d8ecff;border:1px solid #111;padding:7px;overflow:auto;font:12px Consolas,"Courier New",monospace;white-space:pre-wrap}.log-ok{color:#84ff8c}.log-warn{color:#ffd36a}.log-err{color:#ff8585}.log-info{color:#d8ecff}.hint{font-size:11px;color:#333;line-height:1.35}.status{font-weight:bold;color:#003399}.bar{height:15px;background:white;border:1px solid #777;margin:5px 0}.bar>div{height:100%;width:0;background:linear-gradient(90deg,#1a8dff,#68c2ff)}.pill{display:inline-block;padding:2px 6px;border:1px solid #7f9db9;background:#e7f0ff;border-radius:8px}.mono{font-family:Consolas,"Courier New",monospace}.warntext{color:#8a4a00;font-weight:bold}.errtext{color:#b00000;font-weight:bold}
+@media(max-width:850px){.app{grid-template-columns:1fr;height:auto}.logbox{height:340px}}
+</style>
+</head>
+<body>
+<div class="titlebar">MegaBurner Web Serial MX26L6420 Socket-Compatible v0.1</div>
+<div class="app">
+  <div>
+    <div class="group">
+      <h2>Registro / Log</h2>
+      <div id="log" class="logbox"></div>
+      <div class="bar"><div id="progress"></div></div>
+      <div class="row small">
+        <button id="clearLogBtn" title="Limpia el registro visible sin afectar la conexión ni los datos cargados.">Limpiar log</button>
+        <button id="stopBtn" class="danger" title="Solicita detener la operación cuando termine el bloque actual.">Detener</button>
+        <button id="exportLogBtn" title="Descarga el log en formato TXT.">Exportar TXT</button>
+        <button id="exportCsvBtn" title="Descarga métricas de rendimiento en CSV.">Exportar CSV</button>
+        <button id="compareBtn" title="Compara el dump leído contra la imagen preparada en el navegador.">Comparar dump vs imagen</button>
+      </div>
+    </div>
+  </div>
+  <div>
+    <div class="tabs">
+      <div class="tab active" data-tab="main">Principal</div>
+      <div class="tab" data-tab="adv">Opciones avanzadas</div>
+    </div>
+    <div id="main" class="tabpage active">
+      <div class="group">
+        <h2>1. Conexión</h2>
+        <div class="row small">
+          <button id="connectBtn" class="okbtn" title="Abre el puerto serial Web Serial. Debe coincidir con el baudrate del firmware compilado.">Conectar</button>
+          <button id="disconnectBtn" title="Cierra el puerto serial y libera el dispositivo.">Desconectar</button>
+        </div>
+        <div class="hint">Este firmware arranca a <b>500000 baudios</b>. El sistema debe ejecutarse en los mismos baudios que el .ino compilado.</div>
+        <div class="hint warntext">Uso exclusivo: MX26L6420 SOP44 en socket compatible con MX29L3211. No usar con MX29L3211.</div>
+      </div>
+      <div class="group">
+        <h2>2. Archivo ROM / imagen</h2>
+        <div class="row"><input id="fileInput" type="file" title="Selecciona un archivo ROM/binario. El objetivo final es 8 MB." /></div>
+        <div class="row"><label>Tamaño chip</label><span class="pill mono">8388608 bytes / 8 MB</span></div>
+        <div class="row"><label>Preparación</label><select id="fillMode" title="Define cómo convertir el archivo cargado en una imagen exacta de 8 MB."><option value="none">No modificar si ya es 8 MB</option><option value="repeat">Repetir hasta 8 MB</option><option value="ff">Rellenar con FF hasta 8 MB</option></select></div>
+        <div class="row small">
+          <button id="prepareBtn" title="Prepara una imagen de exactamente 8 MB para el MX26L6420.">Preparar imagen</button>
+          <button id="downloadPreparedBtn" title="Descarga la imagen preparada de 8 MB.">Descargar preparada</button>
+        </div>
+        <div id="fileStatus" class="hint">Sin archivo cargado.</div>
+      </div>
+      <div class="group">
+        <h2>3. Operaciones</h2>
+        <div class="row small">
+          <button id="versionBtn" title="Lee la versión y el pinout esperado por el firmware.">Firmware V</button>
+          <button id="checkBtn" class="okbtn" title="Lee y valida el ID del MX26L6420. Erase/Write se bloquean si no coincide.">Check ID</button>
+          <button id="eraseBtn" class="danger" title="Borra completamente el chip. Requiere Check ID correcto antes.">Erase</button>
+        </div>
+        <div class="row small">
+          <button id="writeBtn" class="danger" title="Escribe la imagen preparada usando Word Program de 16 bits. Requiere Erase previo.">Write</button>
+          <button id="crcBtn" class="okbtn" title="Calcula CRC32 leyendo la flash desde Arduino y lo compara con la imagen preparada.">CRC rápido</button>
+          <button id="readBtn" title="Lee los 8 MB completos y guarda el dump en memoria del navegador.">Read / Dump</button>
+          <button id="downloadDumpBtn" title="Descarga el último dump leído desde la flash.">Descargar dump</button>
+        </div>
+        <div id="opStatus" class="hint status">Listo.</div>
+      </div>
+    </div>
+    <div id="adv" class="tabpage">
+      <div class="group">
+        <h2>Opciones avanzadas</h2>
+        <div class="row"><label>Baudrate</label><select id="baudRate" title="Debe coincidir con Serial.begin() del firmware."><option value="115200">115200</option><option value="250000">250000</option><option value="500000" selected>500000 recomendado</option></select></div>
+        <div class="row"><label>Timeout lectura ms</label><input id="timeoutMs" type="number" value="20000" min="1000" step="1000" title="Tiempo máximo de espera para respuestas y bloques seriales." /></div>
+        <div class="row"><label>Read block</label><select id="readBlock" title="Tamaño de bloque para lectura/dump."><option value="4096">4096</option><option value="8192">8192</option><option value="16384" selected>16384 recomendado</option><option value="32768">32768 experimental</option></select></div>
+        <div class="row"><label>Write block</label><select id="writeBlock" title="Tamaño del bloque enviado al firmware en cada operación X."><option value="1024">1024 seguro</option><option value="2048">2048</option><option value="4096" selected>4096 recomendado</option></select></div>
+        <div class="row"><label>Modo programa</label><span class="pill mono">Word Program x16 / pageSize=2</span></div>
+        <div class="row"><label>Skip FF tras Erase</label><input id="skipFF" type="checkbox" title="Omite bloques completos 0xFF solo si se hizo Erase correctamente en esta sesión." /> <span class="hint">Desactivado por defecto.</span></div>
+      </div>
+      <div class="group">
+        <h2>Pin-swap del socket</h2>
+        <div class="hint mono">MX26 pin 1 A21  &lt;= Arduino D7 / PH4 / socket pin 1</div>
+        <div class="hint mono">MX26 pin 33 WE  &lt;= Arduino D6 / PH3 / socket pin 33</div>
+        <div class="hint mono">OE=D16/PH1, CE=D9/PH6, A16-A20=D49-D45/PL0-PL4</div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+'use strict';
+const CHIP_SIZE = 8388608;
+const PAGE_SIZE_SENTINEL = 2;
+const EXPECTED_ID = { mfr: '00C2', dev: '22FC' };
+let port=null, reader=null, writer=null, reading=false;
+let rxChunks=[], rxBytes=0;
+let fileBytes=null, preparedBytes=null, dumpBytes=null;
+let logLines=[], perfRows=[];
+let shouldStop=false, eraseDone=false, idOk=false;
+const $=id=>document.getElementById(id);
+const enc=new TextEncoder(), dec=new TextDecoder();
+function now(){return new Date().toLocaleTimeString('es-CO',{hour12:false});}
+function log(msg,cls='info'){const line=`[${now()}] ${msg}`;logLines.push(line);const div=document.createElement('div');div.textContent=line;div.className='log-'+cls;$('log').appendChild(div);$('log').scrollTop=$('log').scrollHeight;}
+function setProgress(p){$('progress').style.width=Math.max(0,Math.min(100,p))+'%';}
+function setStatus(s){$('opStatus').textContent=s;}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms));}
+function timeout(){return Number($('timeoutMs').value)||20000;}
+function pushRx(chunk){rxChunks.push({buf:chunk,off:0});rxBytes+=chunk.length;}
+function consume(n){const out=new Uint8Array(n);let pos=0;while(pos<n&&rxChunks.length){const c=rxChunks[0];const take=Math.min(n-pos,c.buf.length-c.off);out.set(c.buf.subarray(c.off,c.off+take),pos);c.off+=take;pos+=take;rxBytes-=take;if(c.off>=c.buf.length)rxChunks.shift();}return out;}
+async function readExact(n,ms=timeout()){const start=performance.now();while(rxBytes<n){if(performance.now()-start>ms)throw new Error(`Timeout esperando ${n} bytes; disponibles=${rxBytes}`);await sleep(2);}return consume(n);}
+async function readLine(ms=timeout()){let bytes=[];const start=performance.now();while(true){if(performance.now()-start>ms)throw new Error('Timeout esperando línea');if(rxBytes>0){const b=consume(1)[0];if(b===10)break;if(b!==13)bytes.push(b);}else await sleep(2);}return dec.decode(new Uint8Array(bytes));}
+async function clearRx(){await sleep(60);const n=rxBytes;if(n)consume(n);log(`RX limpiado: ${n} bytes descartados`,'info');}
+async function writeText(s){if(!writer)throw new Error('No hay puerto conectado');await writer.write(enc.encode(s));}
+async function writeBytes(b){if(!writer)throw new Error('No hay puerto conectado');await writer.write(b);}
+async function waitByte(ch,ms=timeout()){const expected=typeof ch==='number'?ch:ch.charCodeAt(0);const start=performance.now();while(true){if(performance.now()-start>ms)throw new Error(`Timeout esperando byte '${String.fromCharCode(expected)}'`);if(rxBytes>0){const b=consume(1)[0];if(b===10||b===13)continue;if(b===expected)return b;if(b===33){let extra='';try{extra=await readLine(500);}catch{}throw new Error(`Firmware error !${extra}`);}throw new Error(`Byte inesperado: 0x${b.toString(16).padStart(2,'0')}`);}await sleep(2);}}
+async function startReader(){reading=true;reader=port.readable.getReader();try{while(reading){const {value,done}=await reader.read();if(done)break;if(value)pushRx(value);}}catch(e){if(reading)log('Error lector: '+e.message,'err');}finally{try{reader.releaseLock();}catch{} reader=null;}}
+async function connect(){if(!('serial'in navigator)){log('Este navegador no soporta Web Serial. Usa Chrome/Edge de escritorio.','err');return;}try{if(port){log('Puerto ya conectado.','warn');return;}port=await navigator.serial.requestPort();await port.open({baudRate:Number($('baudRate').value),dataBits:8,stopBits:1,parity:'none',flowControl:'none'});writer=port.writable.getWriter();startReader();log(`Conectado a ${$('baudRate').value} baudios`,'ok');await clearRx();}catch(e){log(e.message,'err');port=null;}}
+async function disconnect(){try{reading=false;if(reader){try{await reader.cancel();}catch{}} if(writer){writer.releaseLock();writer=null;} if(port){await port.close();port=null;}rxChunks=[];rxBytes=0;log('Desconectado','info');}catch(e){log('Error desconectando: '+e.message,'err');}}
+function crc32(bytes){let crc=0xFFFFFFFF;for(let i=0;i<bytes.length;i++){crc^=bytes[i];for(let j=0;j<8;j++)crc=(crc&1)?(crc>>>1)^0xEDB88320:crc>>>1;}return ((~crc)>>>0).toString(16).toUpperCase().padStart(8,'0');}
+function allFF(u8){for(let i=0;i<u8.length;i++)if(u8[i]!==0xFF)return false;return true;}
+function download(name,bytesOrText){const blob=bytesOrText instanceof Uint8Array?new Blob([bytesOrText]):new Blob([bytesOrText],{type:'text/plain'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);}
+function prepare(){if(!fileBytes){log('No hay archivo cargado','err');return;}const mode=$('fillMode').value;if(fileBytes.length===CHIP_SIZE||mode==='none'){if(fileBytes.length!==CHIP_SIZE){log('Modo none requiere archivo exacto de 8 MB','err');return;}preparedBytes=new Uint8Array(fileBytes);}else{preparedBytes=new Uint8Array(CHIP_SIZE);if(mode==='ff'){preparedBytes.fill(0xFF);preparedBytes.set(fileBytes.subarray(0,Math.min(fileBytes.length,CHIP_SIZE)));}else{for(let o=0;o<CHIP_SIZE;o+=fileBytes.length)preparedBytes.set(fileBytes.subarray(0,Math.min(fileBytes.length,CHIP_SIZE-o)),o);}}log(`Imagen preparada: ${preparedBytes.length} bytes, modo ${mode}`,'ok');}
+async function version(){try{await clearRx();await writeText('V\n');log(await readLine(3000),'info');}catch(e){log(e.message,'err');}}
+async function checkId(){try{await clearRx();await writeText('C\n');const line=await readLine(5000);log(line,line.includes('OK=1')?'ok':'err');idOk=line.includes('OK=1');if(!idOk)log('ID no coincide. Erase/Write deben permanecer bloqueados.','err');}catch(e){log(e.message,'err');}}
+async function erase(){try{if(!idOk){log('Primero ejecuta Check ID correcto.','err');return;}await clearRx();log('Enviando comando E / erase...','warn');await writeText('E\n');await waitByte('%',300000);eraseDone=true;log('Erase terminado. Skip FF puede habilitarse manualmente para el próximo Write.','ok');}catch(e){eraseDone=false;log(e.message,'err');}}
+function record(op,idx,offset,ms,size){perfRows.push({op,idx,offset,ms,size,kib:(size/1024)/(ms/1000)});}
+async function writeImage(){try{if(!preparedBytes){log('Prepara la imagen antes de escribir.','err');return;}if(!idOk){log('Primero ejecuta Check ID correcto.','err');return;}shouldStop=false;const block=Number($('writeBlock').value);const skip=$('skipFF').checked&&eraseDone;log(`Inicio Write MX26L6420: ${preparedBytes.length} bytes, block=${block}, modo=fast word16, skipFF=${skip?'on':'off'}`,'warn');await clearRx();await writeText('S\n');await waitByte('%',5000);let total=0,skipped=0;const t0=performance.now();for(let off=0,idx=1;off<preparedBytes.length;off+=block,idx++){if(shouldStop){log('Operación detenida por solicitud del usuario.','warn');break;}const chunk=preparedBytes.subarray(off,off+block);if(skip&&allFF(chunk)){skipped+=chunk.length;setProgress((off+chunk.length)*100/preparedBytes.length);continue;}const bt=performance.now();await writeText(`X${off},${PAGE_SIZE_SENTINEL},${chunk.length}\n`);await waitByte('&',5000);await writeBytes(chunk);await waitByte('%',120000);const ms=performance.now()-bt;total+=chunk.length;record('write',idx,off,ms,chunk.length);if(idx===1||idx%64===0||off+chunk.length>=preparedBytes.length){log(`write: bloque ${idx}, offset=0x${off.toString(16).padStart(6,'0')}, ${Math.round(ms)} ms, ${(chunk.length/1024/(ms/1000)).toFixed(1)} KiB/s, progreso=${Math.floor((off+chunk.length)*100/preparedBytes.length)}%`,'info');}setProgress((off+chunk.length)*100/preparedBytes.length);}await writeText('Z\n');await waitByte('%',5000);const totalMs=performance.now()-t0;log(`Write terminado: ${fmtMs(totalMs)}, enviado=${total} bytes, saltado=${skipped} bytes, velocidad efectiva=${(preparedBytes.length/1024/(totalMs/1000)).toFixed(1)} KiB/s`,'ok');eraseDone=false;}catch(e){log(e.message,'err');}}
+async function crcVerify(){try{if(!preparedBytes){log('Prepara la imagen antes del CRC.','err');return;}const local=crc32(preparedBytes);log(`CRC local=${local}. Solicitando K0,${preparedBytes.length}...`,'info');await clearRx();const t0=performance.now();await writeText(`K0,${preparedBytes.length}\n`);const flash=dec.decode(await readExact(8,300000));const ms=performance.now()-t0;if(flash.toUpperCase()===local)log(`CRC Verify OK. flash=${flash}, preparada=${local}, tiempo=${fmtMs(ms)}`,'ok');else log(`CRC Verify FALLÓ. flash=${flash}, preparada=${local}`,'err');}catch(e){log(e.message,'err');}}
+async function readDump(){try{shouldStop=false;const block=Number($('readBlock').value);dumpBytes=new Uint8Array(CHIP_SIZE);log(`Inicio Read: ${CHIP_SIZE} bytes, block=${block}`,'info');await clearRx();const t0=performance.now();const blocks=Math.ceil(CHIP_SIZE/block);for(let i=0;i<blocks;i++){if(shouldStop){log('Read detenido por solicitud del usuario.','warn');break;}const off=i*block;const size=Math.min(block,CHIP_SIZE-off);const bt=performance.now();await writeText(`R${i},${size}\n`);const chunk=await readExact(size,60000);dumpBytes.set(chunk,off);const ms=performance.now()-bt;record('read',i+1,off,ms,size);if(i===0||(i+1)%64===0||i===blocks-1)log(`read: bloque ${i+1}, offset=0x${off.toString(16).padStart(6,'0')}, ${Math.round(ms)} ms, ${(size/1024/(ms/1000)).toFixed(1)} KiB/s, progreso=${Math.floor((off+size)*100/CHIP_SIZE)}%`,'info');setProgress((off+size)*100/CHIP_SIZE);}const totalMs=performance.now()-t0;log(`Read/Dump terminado: ${fmtMs(totalMs)}, velocidad efectiva=${(CHIP_SIZE/1024/(totalMs/1000)).toFixed(1)} KiB/s`,'ok');}catch(e){log(e.message,'err');}}
+function compare(){if(!dumpBytes||!preparedBytes){log('Se requiere dump e imagen preparada.','err');return;}if(dumpBytes.length!==preparedBytes.length){log('Tamaños diferentes.','err');return;}for(let i=0;i<dumpBytes.length;i++){if(dumpBytes[i]!==preparedBytes[i]){log(`Diferencia offset 0x${i.toString(16).padStart(6,'0')}: dump=0x${dumpBytes[i].toString(16).padStart(2,'0')} preparada=0x${preparedBytes[i].toString(16).padStart(2,'0')}`,'err');return;}}log(`Comparación OK. CRC32=${crc32(dumpBytes)}`,'ok');}
+function fmtMs(ms){let s=Math.round(ms/1000);const m=Math.floor(s/60);s%=60;return m?`${m}m ${s}s`:`${s}s`;}
+function exportCsv(){const rows=['op,index,offset_hex,ms,size_bytes,kib_s'];for(const r of perfRows)rows.push(`${r.op},${r.idx},0x${r.offset.toString(16)},${Math.round(r.ms)},${r.size},${r.kib.toFixed(3)}`);download('mx26l6420_perf.csv',rows.join('\n'));}
+$('fileInput').addEventListener('change',async e=>{const f=e.target.files[0];if(!f)return;fileBytes=new Uint8Array(await f.arrayBuffer());$('fileStatus').textContent=`Archivo cargado: ${f.name}, ${fileBytes.length} bytes`;log(`Archivo cargado: ${f.name}, ${fileBytes.length} bytes`,'info');if(fileBytes.length===CHIP_SIZE){$('fillMode').value='none';log('Archivo exacto de 8 MB: modo none seleccionado.','info');}});
+for(const t of document.querySelectorAll('.tab'))t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.tabpage').forEach(x=>x.classList.remove('active'));t.classList.add('active');$(t.dataset.tab).classList.add('active');});
+$('connectBtn').onclick=connect;$('disconnectBtn').onclick=disconnect;$('clearLogBtn').onclick=()=>{$('log').textContent='';logLines=[]};$('stopBtn').onclick=()=>{shouldStop=true;log('Solicitud de detener enviada.','warn')};$('exportLogBtn').onclick=()=>download('mx26l6420_log.txt',logLines.join('\n'));$('exportCsvBtn').onclick=exportCsv;$('compareBtn').onclick=compare;$('prepareBtn').onclick=prepare;$('downloadPreparedBtn').onclick=()=>preparedBytes?download('mx26l6420_prepared_8mb.bin',preparedBytes):log('No hay imagen preparada','err');$('downloadDumpBtn').onclick=()=>dumpBytes?download('mx26l6420_dump_8mb.bin',dumpBytes):log('No hay dump','err');$('versionBtn').onclick=version;$('checkBtn').onclick=checkId;$('eraseBtn').onclick=erase;$('writeBtn').onclick=writeImage;$('crcBtn').onclick=crcVerify;$('readBtn').onclick=readDump;
+log('MegaBurner MX26L6420 Socket-Compatible v0.1 listo. Conecta, Firmware V, Check ID, Erase, Write, CRC.','info');
+</script>
+</body>
+</html>

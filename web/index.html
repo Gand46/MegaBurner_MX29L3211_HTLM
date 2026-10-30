@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MegaBurner Web Serial MultiChip v0.7A</title>
+<style>
+:root{--blue:#245edb;--blue2:#0d3b9f;--bg:#ece9d8;--panel:#f8f7ef;--line:#7f9db9;--text:#111;--ok:#087b18;--warn:#9a5700;--err:#b00020}
+*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:var(--bg);font:12px Tahoma,Arial,sans-serif;color:var(--text);overflow:hidden}.title{height:31px;padding:7px 10px;background:linear-gradient(#4b9aff,#2565d7 50%,#0c3d9d);color:#fff;font-weight:700;text-shadow:1px 1px #00347d}.layout{display:grid;grid-template-columns:minmax(450px,1.1fr) minmax(430px,.9fr);gap:7px;padding:7px;height:calc(100vh - 31px)}.panel{background:var(--panel);border:1px solid #888;box-shadow:inset 1px 1px #fff,inset -1px -1px #c5c5c5;border-radius:4px;padding:7px}.left{display:grid;grid-template-rows:auto 1fr auto;min-height:0}.log{background:#071425;color:#dceeff;border:1px solid #111;padding:7px;overflow:auto;white-space:pre-wrap;font:12px Consolas,"Courier New",monospace;min-height:0}.log .ok{color:#8dff98}.log .warn{color:#ffd36b}.log .err{color:#ff8d9a}.log .info{color:#dceeff}.actions{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px}.tabs{display:flex;gap:2px}.tab{padding:5px 14px;border:1px solid #777;border-bottom:none;background:#ddd;cursor:pointer;border-radius:5px 5px 0 0}.tab.active{background:var(--panel);font-weight:700;color:#003399}.tabpage{display:none;height:calc(100vh - 80px);overflow:auto;border:1px solid #777;padding:6px;background:var(--panel)}.tabpage.active{display:block}.group{border:1px solid #8c8c8c;background:#fbfaf4;padding:7px;margin-bottom:7px;border-radius:3px}.group h2{font-size:12px;color:#003399;margin:0 0 6px;padding:3px 5px;background:linear-gradient(90deg,#dbe9ff,transparent)}.row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:5px 0}.row label{min-width:130px}select,input[type=number],input[type=file]{font:12px Tahoma,Arial,sans-serif;border:1px solid var(--line);padding:3px;background:#fff}select{min-width:220px}input[type=number]{width:110px}button{font:12px Tahoma,Arial,sans-serif;padding:4px 10px;border:1px solid #174b86;border-radius:4px;background:linear-gradient(#fff,#dfeeff 48%,#aacaf3 52%,#f7fbff);cursor:pointer;min-height:26px}button:disabled{color:#777;background:#ddd;border-color:#aaa;cursor:not-allowed}.danger{border-color:#8e001d;background:linear-gradient(#fff,#ffe2e5 48%,#ffb8c1 52%,#fff)}.success{border-color:#167322;background:linear-gradient(#fff,#e2ffe6 48%,#b6efbe 52%,#fff)}.status{padding:5px;border:1px inset #bbb;background:#e8e8e8;line-height:1.45}.pill{display:inline-block;padding:2px 6px;border:1px solid #7f9db9;background:#e9f2ff;border-radius:9px;font-family:Consolas,monospace}.hint{font-size:11px;line-height:1.4}.warningbox{padding:6px;background:#fff6d8;border:1px solid #c69200;color:#6d4200}.errorbox{padding:6px;background:#ffe5e8;border:1px solid #a80019;color:#790014}.progress{height:16px;border:1px solid #777;background:#fff;margin:5px 0}.progress>div{height:100%;width:0;background:linear-gradient(90deg,#137de5,#70c8ff)}.metrics{display:grid;grid-template-columns:1fr 1fr;gap:4px}.profile-grid{display:grid;grid-template-columns:1fr 1fr;gap:5px}.profile-card{padding:5px;border:1px solid #a0a0a0;background:#f1f4f8}.mono{font-family:Consolas,"Courier New",monospace}@media(max-width:900px){body{overflow:auto}.layout{grid-template-columns:1fr;height:auto}.left{height:470px}.tabpage{height:auto}.metrics,.profile-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="title">MegaBurner Web Serial MultiChip v0.7A ProfileSafe</div>
+<div class="layout">
+  <section class="panel left">
+    <h2>Registro / Log</h2>
+    <div id="log" class="log"></div>
+    <div>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="actions">
+        <button id="clearLogBtn" title="Limpia el log visible.">Limpiar log</button>
+        <button id="stopBtn" class="danger" title="Solicita detener al terminar el bloque actual.">Detener</button>
+        <button id="exportLogBtn" title="Descarga el log como TXT.">Exportar TXT</button>
+        <button id="exportCsvBtn" title="Descarga métricas por bloque en CSV.">Exportar CSV</button>
+        <button id="compareBtn" title="Compara dump e imagen preparada byte a byte.">Comparar</button>
+      </div>
+    </div>
+  </section>
+  <section>
+    <div class="tabs"><div class="tab active" data-tab="main">Principal</div><div class="tab" data-tab="advanced">Avanzado</div></div>
+    <div id="main" class="tabpage active">
+      <div class="group">
+        <h2>1. Selección segura del chip</h2>
+        <div class="row"><label>Chip físico instalado</label><select id="profileSelect" title="Selecciona el modelo exacto marcado en el chip.">
+          <option value="1">MX29L3211 — 4 MiB — validado</option>
+          <option value="2">MX26L6420MC-90 — 8 MiB — validado</option>
+          <option value="3">MX29LV160CTMC-90 — 2 MiB — experimental</option>
+        </select></div>
+        <div id="profileSummary" class="profile-grid"></div>
+        <div id="profileWarning" class="warningbox"></div>
+        <div class="row"><label><input id="physicalConfirm" type="checkbox"> Confirmo que la referencia física del chip coincide exactamente con la selección.</label></div>
+      </div>
+      <div class="group">
+        <h2>2. Conexión</h2>
+        <div class="actions"><button id="connectBtn" class="success">Conectar y aplicar perfil</button><button id="disconnectBtn">Desconectar</button><button id="versionBtn">Firmware V</button><button id="checkIdBtn" class="success">Check ID</button></div>
+        <div id="connectionStatus" class="status">Desconectado. No hay perfil aplicado.</div>
+      </div>
+      <div class="group">
+        <h2>3. Archivo ROM / imagen</h2>
+        <div class="row"><input id="fileInput" type="file"></div>
+        <div class="row"><label>Preparación</label><select id="fillMode"><option value="none">No modificar si ya tiene tamaño exacto</option><option value="repeat">Repetir/espejar hasta el tamaño del chip</option><option value="ff">Rellenar con FF hasta el tamaño del chip</option></select></div>
+        <div class="actions"><button id="prepareBtn">Preparar imagen</button><button id="downloadPreparedBtn">Descargar preparada</button></div>
+        <div id="fileStatus" class="status">Sin archivo cargado.</div>
+      </div>
+      <div class="group">
+        <h2>4. Operaciones</h2>
+        <div class="actions"><button id="eraseBtn" class="danger">Erase</button><button id="writeBtn" class="danger">Write</button><button id="crcBtn" class="success">CRC rápido</button><button id="readBtn">Read/Dump</button><button id="downloadDumpBtn">Descargar dump</button></div>
+        <div class="progress"><div id="operationBar"></div></div>
+        <div class="metrics"><div id="operationStatus" class="status">Listo.</div><div id="metrics" class="status">Sin métricas.</div></div>
+      </div>
+    </div>
+    <div id="advanced" class="tabpage">
+      <div class="group">
+        <h2>Parámetros compatibles con el perfil</h2>
+        <div class="row"><label>Baudrate</label><input id="baudRate" type="number" value="500000" disabled><span class="hint">Firmware fijo a 500000.</span></div>
+        <div class="row"><label>Timeout normal ms</label><input id="timeoutMs" type="number" value="20000" min="1000" step="1000"></div>
+        <div class="row"><label>Read block</label><select id="readBlock"><option value="4096">4096</option><option value="8192">8192</option><option value="16384" selected>16384 recomendado</option><option value="32768">32768 experimental</option></select></div>
+        <div class="row"><label>Write block</label><select id="writeBlock"><option value="1024">1024</option><option value="2048">2048</option><option value="4096" selected>4096 recomendado</option></select></div>
+        <div class="row"><label>Page size / algoritmo</label><select id="pageSize"></select></div>
+        <div class="row"><label>Modo escritura</label><select id="writeMode"></select></div>
+        <div class="row"><label><input id="skipFF" type="checkbox"> Saltar bloques completamente FF después de Erase OK.</label></div>
+        <div id="advancedNote" class="warningbox"></div>
+      </div>
+      <div class="group"><h2>Estado de seguridad</h2><div id="safetyStatus" class="status"></div></div>
+    </div>
+  </section>
+</div>
+<script>
+'use strict';
+const PROFILES={
+  1:{id:1,key:'3211',name:'MX29L3211',size:4194304,mfr:'00C2',dev:'00F9',page:[256,128],defaultPage:256,fast:true,validated:true,pins:'pin 1=WE (D7/PH4), pin 33=BYTE (D6/PH3), pin 44=A20 (D45/PL4)',note:'Ruta de programación Page Program de v0.5A. FastWrite validado.'},
+  2:{id:2,key:'6420',name:'MX26L6420MC-90',size:8388608,mfr:'00C2',dev:'22FC',page:[2],defaultPage:2,fast:true,validated:true,pins:'pin 1=A21 (D7/PH4), pin 33=WE (D6/PH3), pin 44=A20 (D45/PL4)',note:'Word Program x16 de v0.1 validado con dos chips y dump completo.'},
+  3:{id:3,key:'160C',name:'MX29LV160CTMC-90',size:2097152,mfr:'00C2',dev:'22C4',page:[2],defaultPage:2,fast:false,validated:false,pins:'pin 1=RESET (D7/PH4), pin 33=BYTE (D6/PH3), pin 44=WE (D45/PL4)',note:'Perfil basado en datasheet. Solo modo Safe hasta validación física.'}
+};
+const $=id=>document.getElementById(id);const enc=new TextEncoder(),dec=new TextDecoder();
+let profile=PROFILES[1],port=null,reader=null,writer=null,readLoopActive=false,rx=[],rxBytes=0;
+let connected=false,profileApplied=false,idOk=false,eraseOk=false,writeActive=false,stopRequested=false;
+let sourceBytes=null,preparedBytes=null,dumpBytes=null,logLines=[],perfRows=[];
+function stamp(){return new Date().toLocaleTimeString('es-CO',{hour12:false})}
+function log(msg,kind='info'){const line=`[${stamp()}] ${msg}`;logLines.push(line);const d=document.createElement('div');d.textContent=line;d.className=kind;$('log').appendChild(d);$('log').scrollTop=$('log').scrollHeight}
+function setBar(id,p){$(id).style.width=Math.max(0,Math.min(100,p))+'%'}
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+function timeout(){return Number($('timeoutMs').value)||20000}
+function enqueue(chunk){rx.push({b:chunk,o:0});rxBytes+=chunk.length}
+function take(n){if(rxBytes<n)return null;const out=new Uint8Array(n);let pos=0;while(pos<n){const h=rx[0],avail=h.b.length-h.o,k=Math.min(avail,n-pos);out.set(h.b.subarray(h.o,h.o+k),pos);h.o+=k;pos+=k;rxBytes-=k;if(h.o>=h.b.length)rx.shift()}return out}
+async function readExact(n,ms=timeout()){const start=performance.now();while(rxBytes<n){if(performance.now()-start>ms)throw new Error(`Timeout esperando ${n} bytes; disponibles=${rxBytes}`);await sleep(2)}return take(n)}
+async function readLine(ms=timeout()){const a=[];const start=performance.now();while(true){if(performance.now()-start>ms)throw new Error('Timeout esperando línea');if(rxBytes){const b=take(1)[0];if(b===10)break;if(b!==13)a.push(b)}else await sleep(2)}return dec.decode(new Uint8Array(a))}
+async function waitToken(ch,ms=timeout()){const expected=typeof ch==='number'?ch:ch.charCodeAt(0),start=performance.now();while(true){if(performance.now()-start>ms)throw new Error(`Timeout esperando '${String.fromCharCode(expected)}'`);if(!rxBytes){await sleep(2);continue}const b=take(1)[0];if(b===10||b===13)continue;if(b===33){let rest='';try{rest=await readLine(1000)}catch{}throw new Error(`Firmware error !${rest}`)}if(b===expected)return b;log(`Byte inesperado 0x${b.toString(16).padStart(2,'0')} mientras esperaba '${String.fromCharCode(expected)}'`,'warn')}}
+async function clearRx(){await sleep(40);if(rxBytes){const n=rxBytes;take(n);log(`RX limpiado: ${n} bytes`,'info')}}
+async function writeText(s){if(!writer)throw new Error('Puerto no conectado');await writer.write(enc.encode(s))}
+async function writeBytes(b){if(!writer)throw new Error('Puerto no conectado');await writer.write(b)}
+async function startReader(){readLoopActive=true;reader=port.readable.getReader();try{while(readLoopActive){const {value,done}=await reader.read();if(done)break;if(value)enqueue(value)}}catch(e){if(readLoopActive)log('Error de lectura serial: '+e.message,'err')}finally{try{reader.releaseLock()}catch{}reader=null}}
+function updateProfileUI(){profile=PROFILES[Number($('profileSelect').value)];$('profileSummary').innerHTML=`<div class="profile-card"><b>${profile.name}</b><br><span class="mono">${profile.size.toLocaleString()} bytes</span><br>ID esperado ${profile.mfr}/${profile.dev}</div><div class="profile-card"><b>${profile.validated?'Hardware validado':'Experimental'}</b><br>${profile.fast?'FastWrite disponible':'Solo SafeWrite'}<br>${profile.pins}</div>`;$('profileWarning').textContent='ATENCIÓN: '+profile.note+' Seleccionar un perfil incorrecto puede aplicar funciones distintas a los pines 1, 33 y 44.';$('pageSize').innerHTML=profile.page.map(v=>`<option value="${v}"${v===profile.defaultPage?' selected':''}>${v===2?'2 bytes / Word Program x16':v+' bytes / Page Program'}</option>`).join('');$('writeMode').innerHTML=profile.fast?'<option value="fast" selected>Fast validado</option><option value="safe">Safe / reset por bloque</option>':'<option value="safe" selected>Safe obligatorio (perfil experimental)</option>';$('advancedNote').textContent=profile.note;$('safetyStatus').textContent=`Perfil ${profile.name}; ID obligatorio ${profile.mfr}/${profile.dev}; tamaño ${profile.size} bytes; perfil ${profile.validated?'validado':'no validado físicamente'}.`;sourceBytes=preparedBytes=dumpBytes=null;$('fileStatus').textContent='Sin archivo cargado.';resetSecurity()}
+function resetSecurity(){profileApplied=false;idOk=false;eraseOk=false;writeActive=false;updateButtons()}
+function updateButtons(){$('profileSelect').disabled=connected;$('physicalConfirm').disabled=connected;$('connectBtn').disabled=connected||!$('physicalConfirm').checked;$('disconnectBtn').disabled=!connected;$('versionBtn').disabled=!connected;$('checkIdBtn').disabled=!connected||!profileApplied;$('eraseBtn').disabled=!idOk||writeActive;$('writeBtn').disabled=!idOk||!eraseOk||!preparedBytes||writeActive;$('crcBtn').disabled=!idOk||!preparedBytes||writeActive;$('readBtn').disabled=!idOk||writeActive;$('downloadPreparedBtn').disabled=!preparedBytes;$('downloadDumpBtn').disabled=!dumpBytes;$('compareBtn').disabled=!preparedBytes||!dumpBytes}
+async function connect(){try{if(!('serial'in navigator))throw new Error('Web Serial no disponible; usa Chrome/Edge de escritorio');port=await navigator.serial.requestPort();await port.open({baudRate:500000,dataBits:8,stopBits:1,parity:'none',flowControl:'none',bufferSize:1048576});writer=port.writable.getWriter();startReader();connected=true;updateButtons();log('Conectado a 500000 baudios','ok');await sleep(1300);await clearRx();await writeText('V\n');log(await readLine(4000),'info');await writeText(`P${profile.id},${profile.key}\n`);const line=await readLine(4000);if(!line.includes(`PROFILE:ID=${profile.id}`))throw new Error('El firmware no confirmó el perfil seleccionado: '+line);profileApplied=true;$('connectionStatus').textContent=`Conectado. Perfil aplicado: ${profile.name}. Falta Check ID.`;log(line,'ok');updateButtons()}catch(e){log(e.message,'err');await disconnect(false)}}
+async function disconnect(writeLog=true){try{readLoopActive=false;if(reader){try{await reader.cancel()}catch{}}if(writer){writer.releaseLock();writer=null}if(port){await port.close();port=null}}catch(e){if(writeLog)log('Error al desconectar: '+e.message,'err')}connected=false;rx=[];rxBytes=0;resetSecurity();$('profileSelect').disabled=false;$('physicalConfirm').disabled=false;$('physicalConfirm').checked=false;$('connectionStatus').textContent='Desconectado. No hay perfil aplicado.';if(writeLog)log('Desconectado','info');updateButtons()}
+async function firmwareVersion(){try{await clearRx();await writeText('V\n');log(await readLine(4000),'info')}catch(e){log(e.message,'err')}}
+async function checkId(){try{await clearRx();await writeText('C\n');const line=await readLine(10000);idOk=line.includes('OK=1')&&line.includes(`PROFILE=${profile.id}`);eraseOk=false;$('connectionStatus').textContent=idOk?`ID OK: ${profile.name}. Perfil bloqueado en firmware.`:'ID incorrecto. Erase/Write bloqueados.';log(line,idOk?'ok':'err');updateButtons()}catch(e){idOk=false;log(e.message,'err');updateButtons()}}
+async function eraseChip(){try{if(!confirm(`Borrar completamente ${profile.name}?`))return;setOperation('Erase en curso...');await clearRx();await writeText('E\n');await waitToken('&',5000);const start=performance.now(),timer=setInterval(()=>setOperation(`Erase en curso: ${formatMs(performance.now()-start)}`),1000);try{await waitToken('%',600000)}finally{clearInterval(timer)}eraseOk=true;setOperation(`Erase terminado en ${formatMs(performance.now()-start)}.`);log('Erase terminado','ok');updateButtons()}catch(e){eraseOk=false;log(e.message,'err');setOperation('Erase falló.');updateButtons()}}
+function prepareImage(){if(!sourceBytes){log('Carga primero un archivo','err');return}const mode=$('fillMode').value;if(sourceBytes.length>profile.size){log(`Archivo demasiado grande: ${sourceBytes.length} > ${profile.size}`,'err');return}if(mode==='none'){if(sourceBytes.length!==profile.size){log('Modo none requiere tamaño exacto','err');return}preparedBytes=new Uint8Array(sourceBytes)}else{preparedBytes=new Uint8Array(profile.size);if(mode==='ff'){preparedBytes.fill(0xFF);preparedBytes.set(sourceBytes)}else{for(let o=0;o<profile.size;o+=sourceBytes.length)preparedBytes.set(sourceBytes.subarray(0,Math.min(sourceBytes.length,profile.size-o)),o)}}$('fileStatus').textContent=`Imagen preparada: ${preparedBytes.length.toLocaleString()} bytes, modo ${mode}`;log($('fileStatus').textContent,'ok');updateButtons()}
+function allFF(b){for(let i=0;i<b.length;i++)if(b[i]!==0xFF)return false;return true}
+async function writeImage(){let session=false;try{stopRequested=false;writeActive=true;updateButtons();const block=Number($('writeBlock').value),page=Number($('pageSize').value),mode=$('writeMode').value,skip=$('skipFF').checked&&eraseOk;setOperation(`Write ${profile.name}...`);await clearRx();await writeText('S\n');await waitToken('%',30000);session=true;const t0=performance.now();let sent=0,skipped=0;perfRows=[];for(let off=0,idx=1;off<preparedBytes.length;off+=block,idx++){if(stopRequested)throw new Error('Operación detenida por el usuario');const size=Math.min(block,preparedBytes.length-off),chunk=preparedBytes.subarray(off,off+size);if(skip&&allFF(chunk)){skipped+=size;setOperationProgress(off+size,preparedBytes.length);continue}const bt=performance.now(),cmd=mode==='fast'?'X':'W';await writeText(`${cmd}${off},${page},${size}\n`);await waitToken('&',5000);await writeBytes(chunk);await waitToken('%',180000);const ms=performance.now()-bt;sent+=size;perfRows.push({op:'write',block:idx,offset:off,size,ms,kib:(size/1024)/(ms/1000)});if(idx===1||idx%64===0||off+size>=preparedBytes.length)log(`write: bloque ${idx}, offset=0x${off.toString(16).padStart(6,'0')}, ${Math.round(ms)} ms, ${((size/1024)/(ms/1000)).toFixed(1)} KiB/s`,'info');setOperationProgress(off+size,preparedBytes.length)}await writeText('Z\n');await waitToken('%',30000);session=false;eraseOk=false;const ms=performance.now()-t0;log(`Write terminado: ${formatMs(ms)}, enviado=${sent}, saltado=${skipped}, velocidad=${((preparedBytes.length/1024)/(ms/1000)).toFixed(1)} KiB/s`,'ok');setOperation('Write terminado. Ejecuta CRC y dump completo.')}catch(e){log(e.message,'err');setOperation('Write interrumpido/fallido.');if(session){try{await writeText('Z\n');await waitToken('%',30000);log('Z/reset confirmado después del error','warn')}catch(z){log('No se pudo confirmar Z/reset: '+z.message,'warn')}}}finally{writeActive=false;eraseOk=false;updateButtons()}}
+async function crcVerify(){try{const local=crc32(preparedBytes);setOperation(`CRC local ${local}; leyendo flash...`);await clearRx();const t0=performance.now();await writeText(`K0,${profile.size}\n`);const first=await readExact(1,300000);if(first[0]===33){const rest=await readLine(1000);throw new Error('Firmware error !'+rest)}const tail=await readExact(7,300000),all=new Uint8Array(8);all[0]=first[0];all.set(tail,1);const flash=dec.decode(all).toUpperCase();if(flash===local){log(`CRC OK flash=${flash} imagen=${local} tiempo=${formatMs(performance.now()-t0)}`,'ok');setOperation('CRC correcto. Para cierre, realiza dump completo.')}else{log(`CRC FALLÓ flash=${flash} imagen=${local}`,'err');setOperation('CRC incorrecto.')}}catch(e){log(e.message,'err')}}
+async function readDump(){try{stopRequested=false;const block=Number($('readBlock').value);dumpBytes=new Uint8Array(profile.size);perfRows=[];await clearRx();const t0=performance.now();setOperation(`Read/Dump ${profile.name}...`);for(let off=0,idx=1;off<profile.size;off+=block,idx++){if(stopRequested)throw new Error('Lectura detenida por el usuario');const size=Math.min(block,profile.size-off),bt=performance.now();await writeText(`R${off},${size}\n`);await waitToken('&',5000);const chunk=await readExact(size,60000);dumpBytes.set(chunk,off);const ms=performance.now()-bt;perfRows.push({op:'read',block:idx,offset:off,size,ms,kib:(size/1024)/(ms/1000)});if(idx===1||idx%64===0||off+size>=profile.size)log(`read: bloque ${idx}, offset=0x${off.toString(16).padStart(6,'0')}, ${Math.round(ms)} ms, ${((size/1024)/(ms/1000)).toFixed(1)} KiB/s`,'info');setOperationProgress(off+size,profile.size)}const ms=performance.now()-t0;log(`Read/Dump terminado: ${formatMs(ms)}, ${((profile.size/1024)/(ms/1000)).toFixed(1)} KiB/s`,'ok');setOperation('Dump disponible para comparar/descargar.');updateButtons()}catch(e){log(e.message,'err');setOperation('Read/Dump falló.')}}
+function compare(){if(!preparedBytes||!dumpBytes)return;let count=0,first=[];for(let i=0;i<preparedBytes.length;i++)if(preparedBytes[i]!==dumpBytes[i]){count++;if(first.length<20)first.push(`0x${i.toString(16).padStart(6,'0')}: dump=${dumpBytes[i].toString(16).padStart(2,'0')} esperado=${preparedBytes[i].toString(16).padStart(2,'0')}`)}if(count===0)log(`Comparación OK. CRC32=${crc32(dumpBytes)}`,'ok');else{log(`Comparación FALLÓ: ${count} bytes diferentes. Primeros: ${first.join(' | ')}`,'err')}}
+function crc32(bytes){let c=0xFFFFFFFF;for(let i=0;i<bytes.length;i++){c^=bytes[i];for(let j=0;j<8;j++)c=(c&1)?(c>>>1)^0xEDB88320:c>>>1}return ((~c)>>>0).toString(16).toUpperCase().padStart(8,'0')}
+function setOperation(s){$('operationStatus').textContent=s}
+function setOperationProgress(done,total){const p=Math.floor(done*100/total);setBar('operationBar',p);$('metrics').textContent=`${p}% · ${done.toLocaleString()} / ${total.toLocaleString()} bytes`}
+function formatMs(ms){let s=Math.round(ms/1000),m=Math.floor(s/60);s%=60;return m?`${m}m ${s}s`:`${s}s`}
+function download(name,data){const blob=data instanceof Uint8Array?new Blob([data]):new Blob([data],{type:'text/plain'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)}
+function exportCsv(){const lines=['op,block,offset,size,ms,kib_s',...perfRows.map(r=>`${r.op},${r.block},${r.offset},${r.size},${Math.round(r.ms)},${r.kib.toFixed(3)}`)];download('megaburner_multichip_perf.csv',lines.join('\n'))}
+$('profileSelect').onchange=updateProfileUI;$('physicalConfirm').onchange=updateButtons;$('connectBtn').onclick=connect;$('disconnectBtn').onclick=()=>disconnect();$('versionBtn').onclick=firmwareVersion;$('checkIdBtn').onclick=checkId;$('eraseBtn').onclick=eraseChip;$('prepareBtn').onclick=prepareImage;$('writeBtn').onclick=writeImage;$('crcBtn').onclick=crcVerify;$('readBtn').onclick=readDump;$('compareBtn').onclick=compare;$('clearLogBtn').onclick=()=>{$('log').textContent='';logLines=[]};$('stopBtn').onclick=()=>{stopRequested=true;log('Solicitud de detener enviada','warn')};$('exportLogBtn').onclick=()=>download('megaburner_multichip_log.txt',logLines.join('\n'));$('exportCsvBtn').onclick=exportCsv;$('downloadPreparedBtn').onclick=()=>preparedBytes&&download(`${profile.name}_prepared.bin`,preparedBytes);$('downloadDumpBtn').onclick=()=>dumpBytes&&download(`${profile.name}_dump.bin`,dumpBytes);$('fileInput').onchange=async e=>{const f=e.target.files[0];if(!f)return;sourceBytes=new Uint8Array(await f.arrayBuffer());preparedBytes=dumpBytes=null;$('fileStatus').textContent=`Archivo: ${f.name}, ${sourceBytes.length.toLocaleString()} bytes`;if(sourceBytes.length===profile.size)$('fillMode').value='none';updateButtons();log($('fileStatus').textContent,'info')};document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>{document.querySelectorAll('.tab,.tabpage').forEach(x=>x.classList.remove('active'));t.classList.add('active');$(t.dataset.tab).classList.add('active')});
+updateProfileUI();updateButtons();log('MegaBurner MultiChip v0.7A listo. Selecciona y confirma el chip físico antes de conectar.','info');
+</script>
+</body>
+</html>

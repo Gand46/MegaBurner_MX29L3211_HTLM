@@ -1,0 +1,95 @@
+{
+  "status": "PASS",
+  "errors": [],
+  "warnings": [],
+  "counts": {
+    "footprints": 2,
+    "pads": 130,
+    "segments": 975,
+    "vias": 51,
+    "nets": 43,
+    "netted_pads": 91,
+    "mechanical_unconnected_mega_header_pads": 39,
+    "signal_connectivity_checked_nets": 42,
+    "connectivity_checked_nets": 43,
+    "via_face_attachment_checks": 102,
+    "vias_missing_a_functional_face": 0,
+    "dangling_track_endpoints": 0,
+    "zero_length_segments": 0,
+    "duplicate_segments": 0,
+    "gnd_stitching_vias": 0,
+    "gnd_total_vias": 8,
+    "gnd_routing_vias": 8,
+    "gnd_routed_pads": 7,
+    "gnd_routed_pads_connected": 7,
+    "gnd_plane_components": 0,
+    "cam_source_free_components_expected": 0
+  },
+  "rules": {
+    "track_min_mm": 0.25,
+    "actual_signal_track_mm": 0.25,
+    "power_track_mm": 0.5,
+    "clearance_mm": 0.127,
+    "via_mm": 0.8,
+    "via_drill_mm": 0.4,
+    "board_thickness_mm": 1.6,
+    "copper_layers": 2,
+    "minimum_measured_clearances_mm": {
+      "track_track": 0.184,
+      "track_pad": 0.135,
+      "pad_pad": 0.69,
+      "via_track": 0.141,
+      "via_pad": 0.155,
+      "via_via": 0.2
+    },
+    "silkscreen_dot_pitch_mm": 0.12,
+    "silkscreen_stroke_mm": 0.12,
+    "silkscreen_required_artwork_gap_mm": 0.25,
+    "silkscreen_minimum_label_gap_mm": 0.295,
+    "silkscreen_minimum_text_graphic_gap_mm": 0.26,
+    "silkscreen_minimum_edge_gap_mm": 0.68
+  },
+  "critical_checks": {
+    "SOP44_pin_1": "A21 -> Arduino D7 / PH4",
+    "SOP44_pin_33": "WE# -> Arduino D6 / PH3",
+    "socket_geometry": "standard shield top view; pin 1 lower-left, pin 22 lower-right, pin 23 upper-right, pin 44 upper-left; 2.54mm pitch, 15.24mm rows",
+    "adapter_placement": "58x32mm body above Mega on cropped 85x56mm economy board",
+    "J1_to_Mega_header_min_pad_edge_gap_mm": 14.342,
+    "mechanical_holes": "none; all three former 3.20mm M3/NPTH eyelets removed by user request",
+    "board_profile": "85x56mm rectangle, X=21..106mm in Mega coordinates; 19.8% less board area than 106x56mm KS0005",
+    "silkscreen_pin_labels": "130 labels: 44 adapter plus 86 Arduino Mega",
+    "silkscreen_compatibility_labels": [
+      "MX26L6420: P1=A21 P33=WE P44=A20",
+      "MX29L3211: P1=WE P33=BYTE P44=A20",
+      "MX29LV160CTMC: P1=RESET P33=BYTE P44=WE"
+    ],
+    "silkscreen_orientation_labels": [
+      "MEGABURNER R49 2L",
+      "PIN 1",
+      "MEGA MOD: 5V=3V3"
+    ],
+    "silkscreen_bitmap_flashes": 12088,
+    "silkscreen_expected_bitmap_flashes": 12088,
+    "silkscreen_label_pairs_below_required_gap": 0,
+    "silkscreen_text_graphic_pairs_below_required_gap": 0,
+    "silkscreen_line_primitives": "6 shared KiCad/Gerber strokes with matching coordinates and widths",
+    "fabrication_coordinate_frame": "Gerber/Excellon +Y-up; all 181 PTH and 0 NPTH coordinates checked against Yfab=56.0-Ysource",
+    "cam_copper_objects_checked": 1337,
+    "copper_stack": [
+      "F.Cu / L1 Top",
+      "B.Cu / L2 Bottom"
+    ],
+    "gnd_connectivity": "7/7 GND pads connected by the explicit 0.50 mm routed tree",
+    "routing_topology": "51 vias checked on both faces; no single-face vias, dangling endpoints, zero-length or duplicate segments",
+    "unused_mega_header_positions": "39 isolated no-net pads retained only for the complete standard header pattern",
+    "copper_pours": "none; R4.5 raster pours removed to eliminate source-free copper fragments",
+    "cam_top_view_previews": [
+      "preview/FAB_top_drill_from_Excellon.svg",
+      "preview/FAB_top_silkscreen_from_Gerber.svg"
+    ],
+    "serialized_kicad_pinout": "44/44 J1 pads and 86 Mega header pads parsed; all required nets checked",
+    "target_supply": "logical +3V3 from the modified Mega POWER contact physically labelled 5V; POWER/3V3 isolated",
+    "external_power_input": "none; no TP1/TP2 or standalone +3V3/GND connector",
+    "logic_translation": "none; the complete Mega logic domain must already be 3.3V"
+  }
+}

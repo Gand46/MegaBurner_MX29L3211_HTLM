@@ -1,18 +1,15 @@
 # Changelog
 
-## v0.5E MX29L3211 Final ES/EN
+## v0.7A ProfileSafe
 
-- README bilingüe: español principal + sección English.
-- Documentación de modificación 3.3 V del Mega 2560.
-- Imágenes originales de MegaBurner agregadas en `docs/assets/original-megaburner/`.
-- Agradecimientos integrados en README y docs.
-- Pinout completo actualizado.
-- HTML final en español como `index.html`.
-
-## v0.5E Final500K
-
-- 500000 baudios estable.
-- PageSize 256.
-- FastWrite/FastRead/FastCRC.
-- UI XP.
-- Tooltips.
+- Integración de MX29L3211 v0.5A y MX26L6420 Socket v0.1 sin mezclar algoritmos de programación.
+- Nuevo perfil experimental MX29LV160CTMC-90.
+- Boot sin perfil y pines universales seguros.
+- Selección con claves de confirmación.
+- ID exacto obligatorio y perfil bloqueado tras validación.
+- Erase obligatorio antes de una sesión de escritura.
+- UI dinámica que elimina opciones incompatibles.
+- SafeWrite obligatorio para MX29LV160CT.
+- Lectura por offset con ACK previo.
+- Comparación de dump con conteo total de diferencias.
+- Pruebas de C++, JavaScript, perfiles, rangos y mapeo de puertos.
